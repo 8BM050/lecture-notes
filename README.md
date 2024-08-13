@@ -6,3 +6,5 @@ This repository contains the lecture notes used for the Systems Biology Models c
 ## Issues & Contributing
 If you encounter an issue, please report it by opening an issue. We welcome contributions from anyone, but please refer to our [contributing guidelines](CONTRIBUTING.md) for more information. 
 
+## Authors
+- [Max de Rooij](https://research.tue.nl/en/persons/max-de-rooij)
