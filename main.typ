@@ -897,9 +897,7 @@ A special type of measurements is done using #emph[tracers]. These are molecules
 === Parameter Estimation
 When we have measurements, we also need to couple them to model parameters. If we have _in vitro_ kinetic measurements, we can directly derive the kinetic parameters, for example using a Lineweaver-Burk plot for Michaelis-Menten kinetics. However, a common way to obtain the model parameters from measurements of the state variables is through parameter estimation. This procedure is beyond the scope of these lecture notes, but the general idea is that you use mathematical optimization techniques, as also used in machine learning, to select parameter values that minimize the difference between the observed state variables and the simulated state variables from the model.
 
-== Exercises
-
-// Exercise on steady-state using Van Cauter model? 
+== Exercises 
 
 = Pharmacokinetic Modeling
 
