@@ -897,20 +897,25 @@ A special type of measurements is done using #emph[tracers]. These are molecules
 === Parameter Estimation
 When we have measurements, we also need to couple them to model parameters. If we have _in vitro_ kinetic measurements, we can directly derive the kinetic parameters, for example using a Lineweaver-Burk plot for Michaelis-Menten kinetics. However, a common way to obtain the model parameters from measurements of the state variables is through parameter estimation. This procedure is beyond the scope of these lecture notes, but the general idea is that you use mathematical optimization techniques, as also used in machine learning, to select parameter values that minimize the difference between the observed state variables and the simulated state variables from the model.
 
-== Pharmacokinetic Modeling
+== Exercises
+
+= Pharmacokinetic Modeling
+
+// Add quote :) 
+
 In this book chapter, we will explore a somewhat different application of modeling with differential equations. Instead of focusing on biological processes that occur to natural stimuli, we are now turning to models of how our bodies deal with drugs. This can be divided into two areas of research: pharmacokinetics and pharmacodynamics. The first deals with how the concentrations of drugs in our body change over time after various types of administration and dosing, while the latter involves the study of the biochemical effects of drugs. In short, pharmacokinetics studies what the body does to drugs, while pharmacodynamics focuses on what drugs do to the body. We will be discussing pharmacokinetics, as the components involved in modeling these systems resembles how we approached biological system modeling. Pharmacodynamics however, also requires an understanding of the specific chemical reactions that occur between a drug within the human body, which is beyond the scope of these lecture notes.
 
 The main principle in pharmacokinetics revolves around the determination of the absorption, distribution, metabolism, and excretion (ADME) of drugs following administration. Applications of this range from determining the dose-response curve of different drugs, and in different physiological and pathological conditions, to determining optimal personalized drug doses. 
 
 But instead of directly turning to the components of pharmacokinetics, we will first introduce a few basic concepts that are essential to grasp before diving into the details. When administering or prescribing drugs, the main goal is that they are effective, which means that the amount of drug inside someone's system should reach a level where it can be effective. However, it cannot exceed the concentration required to achieve toxicity. Additionally, we may want to minimize the dosage initially, so we will be able to increase it without coming too close to a toxic dose. To be able to produce solutions to these problems, models can be made of the behavior of drugs inside the body. In this section, we will explore modelling concepts that are necessary for building and understanding these models.
 
-=== Comparmental Models
+== Comparmental Models
 To describe the distribution of drugs after administration, compartments are used in pharmacokinetics. A compartmental model is also often used in epidemiology, for example to describe disease spread over a population. @Brauer2008 Within a compartment, we assume that we have an instant homogeneous distribution of substrate. The quantity of substrate ($q_i$) within a compartment $i$, can be described according to:
 $ ddt(q_i) = "input"(bold(q), t) - "output"(bold(q), t) $<compartment>
 
 Where $bold(q)$ is the vector of all masses in all compartments in the system. As opposed to earlier models, observe that in this case, the differential equation describes substrate #emph[quantity] instead of substrate #emph[concentration]. To convert the differential equation to substrate concentration, we will need to divide the quantity by the #emph[volume of distribution] ($V_d$) of the substrate in the compartment. This is not an actual volume but it is the amount of blood that would be required if the drug was evenly distributed over the body at the concentration of the collected sample. As we assume this volume is kept constant, we can freely divide $q_i$ by $V_d$ within @compartment.
 
-==== One-Compartment Model
+=== One-Compartment Model
 The one-compartment model is the simplest compartmental model in pharmacokinetics. As the name implies, it contains a single volume which contains the species or drug of interest. The one-compartment model is effective in describing drugs that are administered intravenously and remain in specific organs that have a high blood perfusion. This compartment typically combines the heart, liver, kidneys and the blood plasma into one #emph[central compartment], as seen in @one-compartment-model. 
 
 #figure(image("figures/one-compartment-model.png", width: 40%), caption: [One-compartment model with a central compartment containing the drug, and a single elimination term.])<one-compartment-model>
@@ -932,7 +937,7 @@ $ ln(q(t)) = ln(D) - k t \
 
 To test whether a drug concentration after IV bolus injection can be modelled using a one-compartment model, we can plot the log-concentration value over time and inspect whether it has a linear slope. If the points at the low and high concentration values deviate from a linear slope, this may be reason to suspect that more compartments are necessary. However, this can also occur when the measuring equipment has a lower accuracy in specific low or high concentrations, or when the measurement device nears its limit of detection, which is the lowest concentration of drug that the test can measure.
 
-==== Two-Compartment Model
+=== Two-Compartment Model
 The most commonly used pharamcokinetic compartmental model is the two-compartment model. As the name indicates, this model contains two volumes where the drug can reside in. As in the one-compartment model, this model contains the central compartment, but it also contains a #emph[peripheral compartment]. While the compartments in this model have no direct physiological meaning, a reasonable assumption is to think of the central compartment as the highly-perfused tissues, where the drug administered spreads rapidly, while the peripheral compartment represents the tissues with a lower perfusion rate, such as the bone or the adipose tissue. 
 
 #figure(image("figures/two-compartment-model.png", width: 40%), caption: [Two-compartment model with a central and a peripheral compartment containing the drug, which have exchange terms and the central compartment has an elimination term.])<two-compartment-model>
@@ -963,7 +968,7 @@ t_(1 slash 2, beta) = ln(2)/beta $
 
 The reported half life of a drug adhering to two-compartmental kinetics is often only one value, which corresponds to the slowest of the two. 
 
-==== Physiologically-Based Pharmacokinetic Models
+=== Physiologically-Based Pharmacokinetic Models
 In traditional pharmacokinetic models, mainly one and two-compartment models are used, with some models containing more compartments, for example when a specific tissue of interest is modelled separately. However, when more detailed information is desired, we can turn to so-called #emph[Physiologically-based pharmacokinetic] (PBPK) models. These models contain separate compartments for many tissues in the body, and separate arterial and venous blood as compartments. @4cpbpk shows a four-compartment PBPK model. Each of these compartments has its own rate equations, describing the blood flow through a tissue and the metabolism happening. 
 
 #figure(image("figures/4-comp-pbpk.png", width: 50%), caption: [A four-compartment PBPK model, showing various routes of administration, such as through inhalation, IV, or oral.])<4cpbpk>
@@ -976,18 +981,16 @@ Where $A_"art"$ is the concentration in the arterial blood, $Q_x$ is the blood f
 
 $ M_x (A_x) = V_"max" (A_x slash P_x) / (K_m  + A_x slash P_x) $
 
-=== Drug Administration
+== Drug Administration
 Besides compartments that describe the concentrations over time within the body, different routes of administration may also lead to variations in appearance profiles of the drugs. For example, if a drug is administered intravenously, the full dose ends up in the blood stream, while an orally dosed drug may not be fully absorbed by the gastrointestinal tract, leading to a lower absorbed dose. To ensure correct dosage and to prevent toxicity, an accurate representation of drug appearance for different administration routes is critical. In this section, we'll explore the modelling of these routes of administration. 
 
-=== Metabolism and Excretion
+== Metabolism and Excretion
 
-==== The First-Pass Effect
+=== The First-Pass Effect
 
-==== The Blood-Brain Barrier
+== Outcome Measures
 
-=== Outcome Measures
-
-=== Examples of Pharmacokinetic Models
+== Examples of Pharmacokinetic Models
 
 $ mat(
   "A", "B", "C", "D";
@@ -1010,6 +1013,7 @@ $ mat(
 $
 
 == Exercises
+
 
 = Modelling and Simulation of Dynamic Systems with Python
 
