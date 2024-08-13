@@ -113,7 +113,17 @@
 
 #set align(left)
 == Studying Biological Processes as Interconnected Systems
-For the greater part of the 20#super[th] century, biology was dominated by the so-called _reductionist_ view. The central idea was that by detailed examination of each component in the system, we would gain an understanding of the system as a whole. While the obtained knowledge from reductionist research is useful in studying biological systems, reducing these to the sum of their parts has disadvantages that relate to some key properties in complex regulatory systems.
+Many ancient cultures have sought to understand the world around us by defining the most basic components that make up everything. In ancient Greece, the philosopher Empedocles determined all matter to be composed of four primal elements: earth, air, fire, and water.  @Stroker1968 An illustration of these four elements and their combinations is shown in @four-elements.
+
+
+#figure(
+  image("figures/Leibniz_four_elements.jpg", width: 50%),
+  caption: [Leibniz representation of the universe by combining the four elements of Empedocles according to Aristotle. Gottfried Wilhelm von Leibniz, Public domain, via Wikimedia Commons]
+)<four-elements>
+
+Later, Aristotle added a fifth element, _Aether_, as a permanent and heavenly substance. These five elements are seen in other cultures, such as Hinduism @Gopal1990 and Chinese culture @Carroll2012. This idea of reducing the world around us into fundamental components had also transferred to medicine, where Hippocrates systemized the study of four humours _blood_, _yellow bile_, _black bile_, and _phlegm_, which can be linked to air, fire, earth and water respectively. In this study, health was described as the notion of a _balance_ in the amounts of these four humours and subsequently diseases were caused by an imbalance. This practice of humoral medicine was common until the 19#super[th] century. @Jackson2001
+
+While many advances were made in modern medicine, for the greater part of the 20#super[th] century, understanding of biology and medicine was dominated by the so-called _reductionist_ view. The central idea was that by detailed examination of each component in the system, we would gain an understanding of the system as a whole. While the obtained knowledge from reductionist research is useful in studying biological systems from a biochemical perspective, reducing these to the sum of their parts has disadvantages that relate to some key properties in complex regulatory systems.
 
 The first of these is _emergence_. Complex systems regularly display properties related to the combined interaction of the components. These properties cannot be directly related to the components alone. This is often observed in chemistry, as knowledge about the interaction between atoms is not enough to understand the interaction between molecules, as they display emergent properties in specific configurations, which we need to understand as well.
 
