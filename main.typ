@@ -326,7 +326,7 @@ In @example-reaction-graphs, the three types of biochemical graphs are shown for
 
 Additionally, the combined molecule-reaction graph has a special property that the other two do not have. Notice that because of how the graph is constructed, we can never have two metabolites that are directly connected to each other, as well as no reactions that are connected to each other. A graph where you can color two "types" of notes, such that nodes of the same color have no edge between them is called #emph[bipartite]. 
 
-#text(fill: red, [Add example of bipartite graph])
+// TODO: Add example of bipartite graph
 
 === Stoichiometry in Graphs
 A common and useful property that is assigned to edges in molecule-reaction graphs is stoichiometry. In this way, the amount of molecules consumed and produced is included as information within the graph. Using this resulting directed graph with stoichiometric edge properties, we can construct the stoichiometric matrix. We can illustrate this using an example.
