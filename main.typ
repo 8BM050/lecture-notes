@@ -1011,6 +1011,7 @@ $
 
 == Exercises
 
+= Modelling and Simulation of Dynamic Systems with Python
 
 
 #bibliography("bib-refs.bib")
