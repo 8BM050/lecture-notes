@@ -994,26 +994,6 @@ Besides compartments that describe the concentrations over time within the body,
 
 == Examples of Pharmacokinetic Models
 
-$ mat(
-  "A", "B", "C", "D";
-  0, 2, 0, 0, "A";
-  2, 8, 0, 1, "B";
-  0, 0, 0, 4, "C";
-  0, 1, 4, 0, "D";
-  augment: #(hline: 1, vline: -1))
-
-$
-
-$ mat(
-  "A", "B", "C", "D";
-  0, 1, 0, 0, "A";
-  1, 2, 0, 1, "B";
-  0, 0, 0, 1, "C";
-  0, 1, 1, 0, "D";
-  augment: #(hline: 1, vline: -1))
-
-$
-
 == Exercises
 
 
