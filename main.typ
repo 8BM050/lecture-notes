@@ -968,6 +968,8 @@ t_(1 slash 2, beta) = ln(2)/beta $
 
 The reported half life of a drug adhering to two-compartmental kinetics is often only one value, which corresponds to the slowest of the two. 
 
+// TODO: Add figures
+
 === Physiologically-Based Pharmacokinetic Models
 In traditional pharmacokinetic models, mainly one and two-compartment models are used, with some models containing more compartments, for example when a specific tissue of interest is modelled separately. However, when more detailed information is desired, we can turn to so-called #emph[Physiologically-based pharmacokinetic] (PBPK) models. These models contain separate compartments for many tissues in the body, and separate arterial and venous blood as compartments. @4cpbpk shows a four-compartment PBPK model. Each of these compartments has its own rate equations, describing the blood flow through a tissue and the metabolism happening. 
 
