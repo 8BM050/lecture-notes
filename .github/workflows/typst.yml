@@ -1,12 +1,5 @@
-name: compile
+name: compile-test
 on:
-  push:
-    branches: 
-    - main
-    paths:
-    - main.typ
-    - figures/**
-    - decorative_figures/**
   pull_request:
     branches:
     - main
