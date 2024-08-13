@@ -5,11 +5,15 @@ on:
     - main
     paths:
     - main.typ
+    - figures/**
+    - decorative_figures/**
   pull_request:
     branches:
     - main
     paths:
     - main.typ
+    - figures/**
+    - decorative_figures/**
   workflow_dispatch:
 
 permissions:
