@@ -7,9 +7,6 @@ on:
     - main.typ
     - figures/**
     - decorative_figures/**
-    tags:
-    - v*.*.*
-    - prerelease-v*.*.*
   pull_request:
     branches:
     - main
@@ -33,18 +30,3 @@ jobs:
         with:
           source_file: |
             main.typ
-      - name: Upload PDF file
-        uses: actions/upload-artifact@v4
-        with:
-          name: PDFs
-          path: |
-            main.pdf
-      - name: Get current date
-        id: date
-        run: echo "DATE=$(date +%Y-%m-%d-%H:%M)" >> $GITHUB_ENV
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          name: "${{ github.ref_name }} — ${{ env.DATE }}"
-          files: "*.pdf"
