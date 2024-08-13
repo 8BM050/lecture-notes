@@ -165,7 +165,7 @@ Within these lecture notes, various concepts of mathematics will be treated. Som
 Besides mathematics, this course will also feature some programming skills. As with mathematics, these programming languages are tools that we use to perform simulations and analyses. It is not our goal to make you write the most beautiful and efficient programs that exist. What is important is that after the course, you will be able to use appropriate software in modelling. In further parts of these lecture notes, modelling and analyses will be accompanied by examples written in Python, to illustrate how you could perform various procedures yourself.
 
 == Digital Twins
-#text(fill: red)[Introduction to the concept of digital twins]
+// TODO: Introduction to the concept of digital twins
 
 = Network Models
 #set align(center)
