@@ -12,8 +12,8 @@
   date: [version: ]+datetime.today().display("[month]-[year]"),
   background: image("decorative_figures/2024-2.jpg"),
   theme-color: rgb(21, 74, 135),
-  font: "Avenir",
-  title-font: "Avenir",
+  font: "Avenir Next",
+  title-font: "Avenir Next",
 )
 
 #show figure.where(
@@ -42,9 +42,9 @@
       grid(
         columns: (3fr, 1fr, 1fr),
         align: (left, right, right),
-        text(size: 24pt, fill: rgb(21, 74, 135), font: "Avenir")[#it.body],
+        text(size: 24pt, fill: rgb(21, 74, 135), font: "Avenir Next")[#it.body],
         line(start: (0pt, 40pt), end: (0pt, -75pt), stroke: 5pt + rgb(21, 74, 135).lighten(50%)),
-        text(size: 35pt, fill: rgb(21, 74, 135), font: "Avenir")[#ch.display("1")]
+        text(size: 35pt, fill: rgb(21, 74, 135), font: "Avenir Next")[#ch.display("1")]
       )
     )
   ] else [ // correction when no numbering is used
@@ -52,7 +52,7 @@
       grid(
         columns: (3fr, 1fr, 1fr),
         align: (left, right, right),
-        text(size: 24pt, fill: rgb(21, 74, 135), font: "Avenir")[#it.body],
+        text(size: 24pt, fill: rgb(21, 74, 135), font: "Avenir Next")[#it.body],
         [],
         []
       )
