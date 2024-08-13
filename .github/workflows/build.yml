@@ -1,13 +1,8 @@
 name: build-pdf
 on:
   push:
-    branches:
-    - main
-    paths:
-    - main.typ
-    - figures/**
-    - decorative_figures/**
-    - .github/workflows/**
+    tags:
+    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 permissions:
   contents: write
@@ -19,10 +14,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        
       - name: Compile Typst to PDF
         uses: lvignoli/typst-action@v0
         with:
           source_file: |
             main.typ
-      - name: Commit PDF
-        uses: stefanzweifel/git-auto-commit-action@v5
+            
+      - name: Upload PDF file
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDF
+          path: main.pdf
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          name: "${{ github.ref_name }}"
+          files: main.pdf
