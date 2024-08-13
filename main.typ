@@ -899,6 +899,8 @@ When we have measurements, we also need to couple them to model parameters. If w
 
 == Exercises
 
+// Exercise on steady-state using Van Cauter model? 
+
 = Pharmacokinetic Modeling
 
 // Add quote :) 
