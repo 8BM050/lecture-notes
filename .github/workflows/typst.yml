@@ -3,9 +3,13 @@ on:
   push:
     branches: 
     - main
+    paths:
+    - main.typ
   pull_request:
     branches:
     - main
+    paths:
+    - main.typ
   workflow_dispatch:
 
 permissions:
