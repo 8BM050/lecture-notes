@@ -7,6 +7,9 @@ on:
     - main.typ
     - figures/**
     - decorative_figures/**
+    tags:
+    - v*.*.*
+    - prerelease-v*.*.*
   pull_request:
     branches:
     - main
@@ -40,8 +43,7 @@ jobs:
         id: date
         run: echo "DATE=$(date +%Y-%m-%d-%H:%M)" >> $GITHUB_ENV
       - name: Release
-        uses: softprops/action-gh-release@v1
-        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
         with:
           name: "${{ github.ref_name }} — ${{ env.DATE }}"
           files: "*.pdf"
