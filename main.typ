@@ -804,7 +804,7 @@ We can identify positive and negative feedback loops. A positive feedback loop o
 
 Combinations of positive and negative dictate our bodily processes, and a disturbance in the balance of these loops can lead to diseases. Examples include stress-related diseases or diabetes. When analyzing a biological system, it often helps to outline the positive and negative feedback loops in the system to get an understanding of the interacting processes.
 
-#text(fill: red)[illustration?]
+// TODO: Illustration?
 
 === Modelling Example: The Cell Cycle
 In this part, we'll be looking at an example model, explaining the components using the modelling tools we have explored up to this point. The following model is a heavily simplified model of the cell cycle published in 1991 by Goldbeter @Goldbeter1991. In this model, cyclin ($bold(C)$) is modelled to induce the production of a cyclin kinase $(bold(M))$, which in turn activates the production of a cyclin protease $(bold(X))$. This protease then stimulates the degradation of the original cyclin. An illustration of the model and its interactions is given in @fig-goldbeter. 
