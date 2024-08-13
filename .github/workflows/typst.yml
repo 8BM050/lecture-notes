@@ -1,4 +1,4 @@
-name: compile pdf
+name: compile
 on:
   push:
     branches: 
