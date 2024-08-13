@@ -147,7 +147,7 @@ In this course, we will be looking at computer models. However, we will only be 
 
 Instead, in this course, when we talk about a model, we will be referring to a simplified mathematical description of a biological process. The mathematical framework for each model can vary depending on the level of detail we wish to include, the amount of information we possess, and the questions we wish to answer using the model. In these lecture notes, two mathematical frameworks are discussed. The first is graph theory, used to describe interactions between different (biological) components. We can build graphs of biological systems and use these models to derive system properties. Additionally, we will be discussing models that describe processes that change over time, using systems of differential equations. 
 
-#text(fill: red)[Explain more in depth what modelling is; also include bottom-up vs top-down]
+// TODO: Explain more in depth what modelling is; also include bottom-up vs top-down
 
 #figure(
   image("figures/Example_Interaction_Diagram.png", width: 60%),
