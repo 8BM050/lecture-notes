@@ -1,6 +1,16 @@
 #import "@preview/modern-technique-report:0.1.0": *
 #import "@preview/subpar:0.1.0"
 #import "@preview/showybox:2.0.1": showybox
+#import "@preview/codly:1.1.1": *
+#import "@preview/codly-languages:0.1.1": *
+#show: codly-init.with()
+
+#codly(
+  zebra-fill: none,
+  languages: (
+    python: (name: "Python"),
+  )
+)
 
 #show: modern-technique-report.with(
   title: [Introduction to Modelling in Systems Biology],
@@ -143,11 +153,12 @@ This practice can be applied to study mechanisms that keep us alive, such as hom
 == Models and Modelling
 Before we can talk about different modelling techniques, it is important to clarify what we mean with modelling and models in systems biology. A model in science and engineering is a broad concept, but is always something that is made to reflect a part of a real system, often in a simple, more malleable way, in order to study specific components of that system. We can do this by constructing a physical system, such as a pump and a set of tubes to model circulation, through a living model, such as a mouse model, or by means of a computer model, often described in some mathematical framework. These models are all experimental setups, but we can also have conceptual models, such as a diagram of different interactions in a system, or a free body diagram in mechanics. An example of an interaction diagram can be seen in @introduction-example-system.
 
-In this course, we will be looking at computer models. However, we will only be discussing a very specific type of model. While systems biology is a broad field, we are not diving into typical models that are used for machine learning, such as neural networks, or linear regression. 
+In this course, we will be looking at computer models. However, even within computer models, we can make distinctions between types of models. A strong distinction often made is the difference between data-driven, and principles-driven models. In data-driven models, we typically start from a large set of measurements, combined with the desired outcome, such as a prediction, and we let the computer come up with a model that can connect the two. In principles-driven models, we start from existing knowledge of a specific process, and convert this knowledge into rigid mathematical formulations. In the latter, a model is a structured version of a collection of previous knowledge, that we use systematically to obtain new information. Both techniques can be combined, as well, were parameters, or even parts of whole models are distilled from measurements directly, while other parts of the model are fixed based on literature knowledge. The techniques involved in that are beyond the scope of these lecture notes, however.
 
 Instead, in this course, when we talk about a model, we will be referring to a simplified mathematical description of a biological process. The mathematical framework for each model can vary depending on the level of detail we wish to include, the amount of information we possess, and the questions we wish to answer using the model. In these lecture notes, two mathematical frameworks are discussed. The first is graph theory, used to describe interactions between different (biological) components. We can build graphs of biological systems and use these models to derive system properties. Additionally, we will be discussing models that describe processes that change over time, using systems of differential equations. 
 
-// TODO: Explain more in depth what modelling is; also include bottom-up vs top-down
+== Digital Twins
+When studying complicated dynamical systems, such as biological systems, but also in industrial applications, it is often a cost-effective choice to evaluate decisions based on simulations. In industrial applications, this typically involves the measurement of product lifetimes and the probabilities of specific parts breaking. In healthcare, we can take this practice and adapt it to evaluate medical treatment decisions. These simulations are done using a virtual version of the physical system, called a 'Digital Twin'. While many definitions of a digital twin exist, a digital twin in healthcare can be thought of as a virtual representation of (a part of) an individual that enables the simulation of a potential treatment, monitoring and prediction of health, which allows for early personalised interventions, and prevention of disease. The main element distinguishing a digital twin from a model, is its ability to both take into account measurements from the physical system and provide feedback based on these measurements. 
 
 #figure(
   image("figures/Example_Interaction_Diagram.png", width: 60%),
@@ -155,7 +166,9 @@ Instead, in this course, when we talk about a model, we will be referring to a s
 ) <introduction-example-system>
 
 == Outline of the Course
-Over the course, we will be highlighting several types of mathematical models. We will gradually introduce new concepts that arise from the various mathematical frameworks that these models are embedded in. Initially, we will describe how to combine sources of biological evidence to form hypotheses about associations between components. These hypotheses can be combined to form an associative model of interactions. While these are useful in grasping the general function of the system, these models provide limited ways of analyzing the underlying system. Mathematical graph theory can aid us in obtaining static properties of systems and to identify the important components. Therefore, we will shortly discuss the fundamentals of this branch of mathematics, and how this connects to biological meaning. Beyond static graphs, we will move into the world of dynamic modelling and explore how to create simplified models that can describe behavior of a system over time. Finally, we will touch upon what happens when we scale-up these systems to incorporate much more interactions, and how to deal with difficulties that arise as a result. Besides the mathematical frameworks, we will discuss use cases of these models, and how they can aid us in forming and validating hypotheses, designing targeted experiments, and drawing comprehensive conclusions.
+Over the course, we will be highlighting several types of mathematical models. We will gradually introduce new concepts that arise from the various mathematical frameworks that these models are embedded in. Initially, we will describe how to combine sources of biological evidence to form hypotheses about associations between components. These hypotheses can be combined to form an associative model of interactions. While these are useful in grasping the general function of the system, these models provide limited ways of analyzing the underlying system. Mathematical graph theory can aid us in obtaining static properties of systems and to identify the important components. Therefore, we will shortly discuss the fundamentals of this branch of mathematics, and how this connects to biological meaning. 
+
+Beyond static graphs, we will move into the world of dynamic modelling and explore how to create simplified models that can describe behavior of a system over time. Finally, we will touch upon what happens when we scale-up these systems to incorporate much more interactions, and how to deal with difficulties that arise as a result. Besides the mathematical frameworks, we will discuss use cases of these models, and how they can aid us in forming and validating hypotheses, designing targeted experiments, and drawing comprehensive conclusions.
 
 The goal of this course is therefore to provide its students with a strong set of tools that allow them to begin modelling biological systems on a great range of scales and in various medical contexts. But also to give them the ability to use these models as an aid in future experimental research.
 
@@ -163,9 +176,6 @@ The goal of this course is therefore to provide its students with a strong set o
 Within these lecture notes, various concepts of mathematics will be treated. Some concepts, like differential equations, you will have seen in previous courses. Others, such as graph theory, may be new. It is important to highlight that we view mathematics as a method of describing our models and subsequent analyses. While the subject may be interesting and generally important, this course will not touch upon mathematical proofs underlying the various concepts. The description of the mathematics in these lecture notes is purely from a practical point of view. Even though we will need mathematical notation, the equations and notations are made to be as simple and easy-to-read as possible. Furthermore, all equations are explained in as much detail as necessary for understanding their use.
 
 Besides mathematics, this course will also feature some programming skills. As with mathematics, these programming languages are tools that we use to perform simulations and analyses. It is not our goal to make you write the most beautiful and efficient programs that exist. What is important is that after the course, you will be able to use appropriate software in modelling. In further parts of these lecture notes, modelling and analyses will be accompanied by examples written in Python, to illustrate how you could perform various procedures yourself.
-
-== Digital Twins
-// TODO: Introduction to the concept of digital twins
 
 = Network Models
 #set align(center)
@@ -203,9 +213,6 @@ If our graph is small enough, we can often visualize it easily, as was the case 
     image("figures/Example_Simple_Graph.png", width: 20%),
     caption: [An example visualization of a simple graph, with 8 vertices and 9 edges. For small graphs, we can easily make these figures, but for larger graphs, it quickly becomes difficult to prevent overlapping edges, and to distinguish connections.],
   ) <simple-graph-example>
-
-
-
 
 In its simplest form, the adjacency matrix is both square and #emph[symmetric], which means that on coordinate $[i, j]$ you will find the exact same entry as on coordinate $[j, i]$. Moreover, you will find only the numbers $0$ and $1$ in this matrix, where a $0$ in position $[i, j]$ denotes that two vertices, represented by row $i$ and column $j$ are #emph[unconnected] and a $1$  in this position indicates that there is a connection between these two vertices. We can form the adjacency matrix for the graph in @simple-graph-example as follows
 
@@ -270,7 +277,7 @@ Where $n_k$ is the number of vertices having degree $k$ and $n$ the total number
 In words, this says that the sum of all degrees in a graph equals twice the amount of edges. Therefore, the sum of all degrees in a graph must always be #emph[even]. 
 
 ==== Scale-Free Graphs
-A popular property related to degree distributions and often attributed to metabolic networks is scale-freeness. @Broido2019 The main observation in a scale-free network is that the degree-distribution follows a power-law, which is given by
+A popular property related to degree distributions and often attributed to metabolic networks is scale-freeness. @Rajula2018 The main observation in a scale-free network is that the degree-distribution follows a power-law, which is given by
 
 $ P_"sf" (k) = k^(-gamma) $
 
@@ -278,7 +285,7 @@ Where the parameter $gamma$ typically lies between a value of 2 and 3.
 
 This property relates to the idea that in a large network, there are a few vertices that are connected to many others, while there are many vertices that are only connected to one or a few others. Vertices that have many connections in such a network are called #emph[hubs]. A simple analogy for understanding the property is by imagining a graph of all people in the world, where two people are connected if they've shaken hands. You can imagine that there are a few people, such as the president of the United States, that have shaken hands with many people, while many people have only shaken hands with a couple hundred people from their neighborhood. Similarly, on a social media platform like Instagram, there are many people where the sum of followers and following is lower than 1000, while only a few people have a sum of followers and following of more than a million.
 
-While it was initially thought that all of these networks were scale-free, studies have shown that while they sometimes approach scale-freeness, very few of them actually strongly adhere to the power law property. 
+While it was initially thought that all of these networks were scale-free, studies have shown that while they sometimes approach scale-freeness, very few of them actually strongly adhere to the power law property. @Broido2019
 
 ==== Connectedness
 A basic property that most graphs you'll encounter have, is connectedness. An undirected graph is connected if we can reach every other vertex in the graph, starting from one random vertex. Considering directed graphs, we can distinguish various levels of connectedness. We call a directed graph #emph[weakly connected], if it becomes a connected graph when we do not consider the directionality of the edges. In the case where there is either a path from vertex $a$ to vertex $b$, or the other way around, for every vertex in the graph, we can call this graph semi-connected. When for every vertex $a$ and $b$ in the graph, we have both a path from $a$ to $b$, as well as a path from $b$ to $a$, we call this graph strongly connected.
@@ -303,11 +310,11 @@ Many other properties relate in some way to paths or distances. For a vertex A, 
 ==== Biochemical Graphs
 In modelling of metabolic pathways, graphs are often used to represent the large metabolic networks in various organisms. They have been extensively used to study the structural properties of metabolic regulation. For biochemical graphs, we can identify three types: the molecule graph, the reaction graph, and the molecule-reaction graph. Below we will see how to construct each of them.
 
-The #emph[molecule graph] or metabolite graph, as it is called when talking about metabolic networks, is constructed by taking all molecules in a reaction system and connecting them if two molecules are in the same reaction. 
+The #emph[substrate graph] or metabolite graph, as it is called when talking about metabolic networks, is constructed by taking all substrates in a reaction system and connecting them if two substrates are in the same reaction. 
 
-The #emph[reaction graph] is constructed in a similar way, but now we take all reactions as vertices and connect two of them if they contain the same molecule.
+The #emph[reaction graph] is constructed in a similar way, but now we take all reactions as vertices and connect two of them if they contain the same substrate.
 
-Finally, the combined #emph[molecule-reaction graph] or metabolite-reaction graph is constructed by taking both molecules and reactions as vertices. If a molecule is in a reaction, we connect that molecule to the reaction. This specific graph can be made in an undirected way, as well as a directed way, where substrates are connected to reactions via outgoing edges towards reactions, while products are connected through incoming edges from reaction vertices.
+Finally, the combined #emph[substrate-reaction graph] or metabolite-reaction graph is constructed by taking both substrates and reactions as vertices. If a substrate is in a reaction, we connect that substrate to the reaction. This specific graph can be made in an undirected way, as well as a directed way, where substrates are connected to reactions via outgoing edges towards reactions, while products are connected through incoming edges from reaction vertices.
 
 In @example-reaction-graphs, the three types of biochemical graphs are shown for the reaction system:
 
@@ -316,15 +323,15 @@ In @example-reaction-graphs, the three types of biochemical graphs are shown for
     & R_3: #h(50%) 2D -> E $
 
 #subpar.grid(
-  figure(image("figures/Example-met-graph.png", width: 100%), caption: "Molecule graph"), <example-reaction-graphs-a>,
+  figure(image("figures/Example-met-graph.png", width: 100%), caption: "Substrate graph"), <example-reaction-graphs-a>,
   figure(image("figures/Example-reac-graph.png", width: 60%), caption: "Reaction graph"), <example-reaction-graphs-b>,
-  figure(image("figures/Example-metreac-graph.png", width: 100%), caption: "Molecule-reaction graph"), <example-reaction-graphs-c>,
+  figure(image("figures/Example-metreac-graph.png", width: 100%), caption: "Substrate-reaction graph"), <example-reaction-graphs-c>,
   columns: (1fr, 1fr, 1fr),
   caption: [Three types of graphs in biochemical systems.],
   label: <example-reaction-graphs>,
 )
 
-Additionally, the combined molecule-reaction graph has a special property that the other two do not have. Notice that because of how the graph is constructed, we can never have two metabolites that are directly connected to each other, as well as no reactions that are connected to each other. A graph where you can color two "types" of notes, such that nodes of the same color have no edge between them is called #emph[bipartite]. 
+Additionally, the combined substrate-reaction graph has a special property that the other two do not have. Notice that because of how the graph is constructed, we can never have two metabolites that are directly connected to each other, as well as no reactions that are connected to each other. A graph where you can color two "types" of notes, such that nodes of the same color have no edge between them is called #emph[bipartite]. 
 
 // TODO: Add example of bipartite graph
 
@@ -393,11 +400,6 @@ Many online databases exist for all of the data types mentioned, and for some or
 
 Additionally, known physiological constraints, such as localization constraints, or the biological knowledge that an organism or cell can produce a specific enzyme can help in identifying missing components. Finally, we can fill up missing components by using computer models. As our network needs to be able to simulate, we can fill in the gaps by fixing mass balances, or adding molecules necessary to produce specific products. These unvalidated reactions are called #emph[inferred] reactions. The computational tools used to infer these reactions are beyond the scope of this course and will be discussed in the Systems Medicine master course.
 
-=== The Metabolic Network of Yeast
-
-
-Up to now, these networks have been particularly useful in bioengineering contexts, where DNA modifications are introduced in model organisms to enable the production of molecules or drugs that are otherwise hard to synthesize. Additionally, the identification of the origins of metabolic diseases is an important application of these networks.
-
 #pagebreak()
 == Exercises
 *1. For the following undirected graphs, write down the adjacency matrix*
@@ -438,13 +440,7 @@ $
 
 #quote(attribution: [Remi (Ratatouille)])[The only thing predictable about life is its unpredictability.]
 
-At the end of the previous chapter, we have seen that we can express systems of chemical reactions as a various types of graphs. We closed with the molecule-reaction graph, where the stoichiometric coefficients represent the edge weights. We also introduces the stoichiometry matrix, or $N$, which could be derived from the substrate-reaction graph. In this chapter, we will use this graph, combined with other concepts to discuss dynamic behavior of these reaction systems.
-
-We will also dive into systems that cannot be simply written as linear systems of equations, and we will delve into some examples of these systems. Furthermore, some recognizable elements of these dynamic systems are discussed separately. This is especially important when describing a model of two competitive binders, enzyme kinetics, or when we are modeling systems that automatically restore to their original state with the help of feedback loops. This will be heavily illustrated with examples, which also show how these feedback loops can sometimes explain mechanisms of pathology. 
-
-Additionally, some systems become stable if no external input is given, which is called the steady-state. We will discuss this steady-state and so-called model setpoints that specifically determine the steady-state of a system. These inputs that can be used to push a model out of its steady state are called perturbations. We will show examples of how these can be modeled and what kind of perturbations are often used. 
-
-Finally, we will discuss how these models can be combined with experimental measurements to validate or create new hypotheses about system behavior. This will be accompanied by a discussion of pharmacological modelling, and how these dynamic pharmacokinetic models play a large role in describing how drugs are distributed throughout the human body.
+At the end of the previous chapter, we have seen that we can express systems of chemical reactions as a various types of graphs. We closed with the molecule-reaction graph, where the stoichiometric coefficients represent the edge weights. We also introduced the stoichiometry matrix, or $N$, which could be derived from the substrate-reaction graph. In this chapter, we will use this graph, combined with other concepts to discuss dynamic behavior of these reaction systems.
 
 == Biochemical Systems
 As discussed in the Introduction to this chapter, we will go more in-depth into the chemical reactions discussed in the previous chapter. We will start with an example. 
@@ -482,7 +478,7 @@ N = (B-A)^T = mat(
 
 This procedure can give us static information about the reaction system we are studying, such as whether a molecule is produced or consumed overall, and which molecules may be most critical for the system. However, if we want to observe how this reaction occurs over time, we do not have enough information yet. For this, we are going to look at #emph[reaction rates] in the next part of this section.
 
-=== The Law of Mass-Action
+== The Law of Mass-Action
  To be able to describe concentrations of molecules in a reaction system over time, we need to know at what rate the reaction occurs, besides the stoichiometry of the system. This reaction rate is defined as the amount of molecules that is converted per unit of time. The reaction rate is a row-vector with an entry for each reaction and labelled $v$. 
 
 The reaction rate for each reaction is given by the law of mass-action, which states that the rate of any reaction is directly proportional to the concentrations of our substrates. This means that for the reaction rate, we multiply all substrates together, and multiply this with the basal reaction rate $k$.
@@ -527,8 +523,6 @@ $
 &frac(upright(d)[Y], upright(d)t) &=& k[X]^2
 $
 
-We will now take a brief intermezzo into differential equations.
-
 ==== Differential Equations
 
 Instead of directly describing molecular modelling processes as functions of time, it is often more intuitive to use #emph[ordinary differential equations] to describe the system's behavior over time. Differential equations have been introduced to you in your calculus course, and you may be familiar with solving simple examples. However, we will not be concerned with solving these differential equations analytically. Instead, we will analyze them directly and describe their components. 
@@ -538,6 +532,7 @@ $ underbrace((upright(d)X )/ (upright(d)t), "rate of change of X at time t") = u
 
 Often, we can derive these production and consumption terms from mass-action kinetics, but as modelers, we also have the freedom of taking other assumptions about these terms. Examples of these will be discussed in the next section. For now, let's further explore some examples of mass-action kinetic models and identify the production and consumption terms in each model. 
 
+==== Model Examples
 In our first example, let's discuss a system with two reactions and one molecule. This type of reaction is a very simple basis for a biochemical model, where we have a constant input, and a concentration-dependent consumption term. In future sections, you will be able to recognize the result of this example in parts of models.
 
 #example[
@@ -619,15 +614,122 @@ In this example, we can see that $A$ contained two production terms and one cons
   $
 ]
 
-==== Identifying Components of Biochemical ODE Systems
+== Identifying Components of Biochemical ODE Systems
 
 In the previous part, you may have seen repeated elements in these systems of differential equations. Elements that #emph[couple] two of the described molecules, or more formally called #emph[state variables], are called #emph[coupling terms]. Because of these, our systems become complicated to solve, as each state variable could be dependent on many others. Besides the identification of coupling terms, it is important to be able to distinguish production from consumption terms. Observe the system from example 3.3 and shown in @loop-system. When looking at the differential equations, we can see that all of our state variables are coupled by the term $k_2[A][B]$. Furthermore, $[B]$ and $[D]$ are coupled by the term $k_3[D]$. In biochemical systems, these coupling terms contain consumptive and productive counterparts.
 
-Other terms in the system are open-ended, and are either production or consumption terms, such as the constant production of $[A]$, governed by term $k_1$. In this way, each term in the ODE system can be explained. This explainability is important, as a direct link to the underlying chemical or biological process can be made. Using this knowledge, we can perform targeted hypothesis testing by simulating these systems under different conditions. This simulation will be discussed later in these lecture notes. First, we will take a look at a different type of system: the signalling network.
+Other terms in the system are open-ended, and are either production or consumption terms, such as the constant production of $[A]$, governed by term $k_1$. In this way, each term in the ODE system can be explained. This explainability is important, as a direct link to the underlying chemical or biological process can be made. Using this knowledge, we can perform targeted hypothesis testing by simulating these systems under different conditions. In the next chapter, we will take a look at how to simulate these differential equations.
+
+= Numerical Solutions of Differential Equations
+
+#quote(attribution: [Remi (Ratatouille)])[The only thing predictable about life is its unpredictability.]
+
+As soon as we have defined the model for our biochemical system using differential equations, we typically also want to calculate the system behavior over time. In specific cases, it is possible to obtain a solution of your differential equation analytically, but in most models, this is typically not possible. For these models, we turn to so-called numerical methods to obtain the solution to differential equations. 
+
+In this course, numerical methods are treated only very briefly, with a focus on application in Python. While many methods exist, we will only look at the most basic numerical method for solving differential equations. 
+
+== Requirements for Solving an ODE Numerically
+To be able to get the solution, we have some settings that we need to specify beforehand, so the numerical method can be used. For solving a differential equation, we will need the _initial conditions_ of all the state variables. Another term often encountered in this field is _Initial Value Problem_ or IVP, which reflect the main idea behind numerical solutions to differential equations. Namely, given a set of initial values, calculate the next value in time. Besides the initial values, we need to specify at what value of time to stop computing the next value in time, because otherwise our numerical method will go on indefinitely. 
+
+== Euler's Method
+Now that we have obtained the initial values and the time at which the numerical solution should end, we can start solving the differential equation. Remember, from a previous part of these lecture notes, that a differential equation with known parameters $p$, typically looks like this:
+$ (upright(d) y (t))/(upright(d) t) = f (y, t, p) $
+
+So, if we know the value of $y(t)$ for a specific value $t$, we can directly compute the numerical value of the derivative of $y$ at this same value $t$. As stated before, we have the initial value of $y$. Let's for now assume that we start solving at $t=0$, which means that we have the value for $y(t=0)$, and we can compute the value of the derivative, which is
+$ (upright(d) y (t=0))/(upright(d) t) = f(y(t=0), 0, p) $. 
+
+The question now is: how can we use this information about the derivative to compute the next value for $y$ in time, say at a time $Delta t$?
+
+What you may remember from your calculus course, is that we can _approximate_ any function $f(x)$ around a value $x=a$, by using a Taylor polynomial. The Taylor polynomial for such a function looks like:
+
+$ f(x) approx f(a) + (x-a) / 1! dot (upright(d) )/(upright(d) t)(f(a)) + (x-a)^2 / 2! dot (upright(d)^2 )/(upright(d) t^2)(f(a)) + dots + (x-a)^n / n! dot (upright(d)^n )/(upright(d) t^n)(f(a)) $
+
+If we cut this off after the first derivative, we get:
+
+$ f(x) approx f(a) + (x-a) / 1! dot (upright(d) )/(upright(d) t)(f(a))  + cal(O)(2) $
+
+We can use this to get an approximation of the value of our differential equation at $t = Delta t$. We can fill this equation in by using $f(x) = y(Delta t)$, and using $a = 0$, and we get:
+
+$ y(t = Delta t) approx y(t = 0) + Delta t dot (upright(d) )/(upright(d) t)(y(t=0))  + cal(O)(2) $
+
+As we know the value for this derivative is given by the original differential equation, we can _approximate_ the value for $y(t = Delta t)$ by:
+
+$ y(t = Delta t) approx y(t = 0) + Delta t dot f(y(t = 0), 0, p) $
+
+However, we are not done yet. As we now have a numerical value for $y (t = Delta t)$, we can compute its derivative using the differential equation, and compute the next time step $y (t = 2 Delta t)$ using the same principles. What we then get is Euler's method. We can make the equation a bit easier to understand as follows:
+
+$ underbrace(y(t + Delta t), "New value of "y "at time "t+Delta t) = overbrace(y(t), "Current value of "y "at time "t) + underbrace(Delta t, "time step") dot overbrace((upright(d) )/(upright(d) t)(y(t)),"Derivative of "y" at time "t ) $
+
+== Implementing Euler's Method in Python
+The Python code in this section is also included in the notebook `ode-simulation-with-python.ipynb` that is included in the course.
+
+As seen in the previous section, Euler's method can be regarded as a first-order Taylor polynomial. To compute the next step in time using Euler's method, we need the value of our state variables at time $t$, the time step $Delta t$, and the derivative of our state variables at time $t$. 
+
+Because this derivative is given by our differential equation, we can implement a Python function of our differential equation first. This function takes the current value of $y(t)$, the time $t$, and the parameters of the system $p$, and returns the derivative of the system. For this example, we will use the simple differential equation:
+$ upright(d) / (upright(d) t) (y(t)) = -y(t) $
+
+Observe that currently, we have no parameters in our differential equation. The corresponding Python function is:
+
+#figure(caption: "A simple differential equation in Python")[
+```python
+def dydt(y, t):
+  return -y
+```]<python-ode-simple>
+
+We can now run Euler's method. Observe the following Python code:
+#figure(caption: "Scripted implementation of Euler's method in Python")[
+```python
+# set the time step and the initial value for y
+delta_t = 0.1
+y_0 = 1.0
+
+# set the time to start and to end
+t = 0
+t_end = 10
+
+# initialize the lists of the solution and the corresponding times
+y = [y_0]
+time_values = [0]
+
+while t <= t_end:
+  # get the current value of y
+  y_current = y[-1]
+
+  # compute the derivative
+  derivative = dydt(y_current, t)
+
+  # use euler's method to compute the next value
+  y_new = y_current + delta_t * derivative
+
+  # add the next value to the list
+  y.append(y_new)
+
+  # increment the time and add it to the saved time values
+  t += delta_t
+  time_values.append(t)
+```]<python-euler-scripted>
+
+
+== Numerical Error and More Advanced Methods
+As you may remember from calculus, the approximation given by Taylor polynomials becomes better for values that lie close to the original value. This means that the error of Euler's method for one time step becomes smaller, as the time step gets closer to zero. However, for longer simulations, this also means that we need to take more steps to eventually get to the final time value that we have specified. 
+
+To improve the numerical solution of differential equations, people have devised methods that give improved estimations with larger time steps, so we can finish simulations faster. Additionally, even more advanced methods use _adaptive time steps_, which means that the time steps are calculated based on the size and the rate of change of the derivative. The details of these methods are beyond the scope of these lecture notes, but in Python, you will make use of these more advanced methods. 
+
+== Solving Differential Equations Numerically with Python
+The Python code in this section is also included in the notebook `ode-simulation-with-python.ipynb` that is included in the course.
+
+= Biological Signalling and Enzymatic Systems
+
+#quote(attribution: [Remi (Ratatouille)])[The only thing predictable about life is its unpredictability.]
+
+In chapter 3, we have observed systems of molecules that are produced and consumed according to mass-action kinetics. In this chapter, we will see that we can use the mass-action formalism to model stimulatory and suppressive signals, as well as systems containing enzymes. However, we will also show some assumptions that can be made to simplify the model. 
+
+We will also dive into systems that cannot be simply written as linear systems of equations, and we will delve into some examples of these systems. Furthermore, some recognizable elements of these dynamic systems are discussed separately. This is especially important when describing a model of two competitive binders, enzyme kinetics, or when we are modeling systems that automatically restore to their original state with the help of feedback loops. This will be heavily illustrated with examples, which also show how these feedback loops can sometimes explain mechanisms of pathology. 
+
+Additionally, some systems become stable if no external input is given, which is called the steady-state. We will discuss this steady-state and so-called model setpoints that specifically determine the steady-state of a system. 
 
 == Signaling Systems
-
-In the previous section, we have observed systems of molecules that are produced and consumed according to mass-action kinetics. In this section, we will see that we can use the mass-action formalism to model stimulatory and suppressive signals. However, we will also show some assumptions that can be made to simplify the model. In this section, we will talk about ways to introduce suppressive of stimulatory signals into a model, and illustrate some differences with earlier biochemical models. We will then zoom out of individual signals and inspect models as a whole. In particular, we'll discuss feedback loops that arise as a consequence of included signaling pathways and end with an example model containing several components we have discussed in this and the previous section.
+In this section, we will talk about ways to introduce suppressive of stimulatory signals into a model, and illustrate some differences with earlier biochemical models. We will then zoom out of individual signals and inspect models as a whole.
 
 === Linear Stimulation
 
@@ -899,7 +1001,7 @@ When we have measurements, we also need to couple them to model parameters. If w
 
 == Exercises 
 
-= Pharmacokinetic Modeling
+= Whole-Body Models
 
 // Add quote :) 
 
@@ -909,7 +1011,7 @@ The main principle in pharmacokinetics revolves around the determination of the 
 
 But instead of directly turning to the components of pharmacokinetics, we will first introduce a few basic concepts that are essential to grasp before diving into the details. When administering or prescribing drugs, the main goal is that they are effective, which means that the amount of drug inside someone's system should reach a level where it can be effective. However, it cannot exceed the concentration required to achieve toxicity. Additionally, we may want to minimize the dosage initially, so we will be able to increase it without coming too close to a toxic dose. To be able to produce solutions to these problems, models can be made of the behavior of drugs inside the body. In this section, we will explore modelling concepts that are necessary for building and understanding these models.
 
-== Comparmental Models
+== Compartmental Models
 To describe the distribution of drugs after administration, compartments are used in pharmacokinetics. A compartmental model is also often used in epidemiology, for example to describe disease spread over a population. @Brauer2008 Within a compartment, we assume that we have an instant homogeneous distribution of substrate. The quantity of substrate ($q_i$) within a compartment $i$, can be described according to:
 $ ddt(q_i) = "input"(bold(q), t) - "output"(bold(q), t) $<compartment>
 
@@ -952,7 +1054,7 @@ The solution of this model is more difficult, and requires the Laplace transform
 
 $ q_1(t) = C_1 e^(-alpha t) + C_2 e^(-beta t) $
 
-The constants $C_1$, $C_2$, $alpha$ and $beta$ are not in the original model equations, but can be calculated from them. $alpha$ and $beta$ are known as the emph[macro]-rate constants. The four constants are related to the original model parameters as
+The constants $C_1$, $C_2$, $alpha$ and $beta$ are not in the original model equations, but can be calculated from them. $alpha$ and $beta$ are known as the #emph[macro]-rate constants. The four constants are related to the original model parameters as
 $ 
 alpha + beta = k_0 + k_1 + k_2 \
 alpha dot beta = k_2 dot k_0 \
@@ -971,7 +1073,7 @@ The reported half life of a drug adhering to two-compartmental kinetics is often
 // TODO: Add figures
 
 === Physiologically-Based Pharmacokinetic Models
-In traditional pharmacokinetic models, mainly one and two-compartment models are used, with some models containing more compartments, for example when a specific tissue of interest is modelled separately. However, when more detailed information is desired, we can turn to so-called #emph[Physiologically-based pharmacokinetic] (PBPK) models. These models contain separate compartments for many tissues in the body, and separate arterial and venous blood as compartments. @4cpbpk shows a four-compartment PBPK model. Each of these compartments has its own rate equations, describing the blood flow through a tissue and the metabolism happening. 
+In traditional pharmacokinetic models, mainly one and two-compartment models are used, with some models containing more compartments, for example when a specific tissue of interest is modelled separately. However, when more detailed information is desired, we can turn to so-called _Physiologically-based pharmacokinetic_ (PBPK) models. These models contain separate compartments for many tissues in the body, and separate arterial and venous blood as compartments. @4cpbpk shows a four-compartment PBPK model. Each of these compartments has its own rate equations, describing the blood flow through a tissue and the metabolism happening. 
 
 #figure(image("figures/4-comp-pbpk.png", width: 50%), caption: [A four-compartment PBPK model, showing various routes of administration, such as through inhalation, IV, or oral.])<4cpbpk>
 
@@ -983,21 +1085,15 @@ Where $A_"art"$ is the concentration in the arterial blood, $Q_x$ is the blood f
 
 $ M_x (A_x) = V_"max" (A_x slash P_x) / (K_m  + A_x slash P_x) $
 
-== Drug Administration
+== Modeling Delays
+
+== Administration Routes
 Besides compartments that describe the concentrations over time within the body, different routes of administration may also lead to variations in appearance profiles of the drugs. For example, if a drug is administered intravenously, the full dose ends up in the blood stream, while an orally dosed drug may not be fully absorbed by the gastrointestinal tract, leading to a lower absorbed dose. To ensure correct dosage and to prevent toxicity, an accurate representation of drug appearance for different administration routes is critical. In this section, we'll explore the modelling of these routes of administration. 
-
-== Metabolism and Excretion
-
-=== The First-Pass Effect
 
 == Outcome Measures
 
-== Examples of Pharmacokinetic Models
+== Examples
 
 == Exercises
-
-
-= Modelling and Simulation of Dynamic Systems with Python
-
 
 #bibliography("bib-refs.bib")
