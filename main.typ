@@ -620,6 +620,8 @@ In the previous part, you may have seen repeated elements in these systems of di
 
 Other terms in the system are open-ended, and are either production or consumption terms, such as the constant production of $[A]$, governed by term $k_1$. In this way, each term in the ODE system can be explained. This explainability is important, as a direct link to the underlying chemical or biological process can be made. Using this knowledge, we can perform targeted hypothesis testing by simulating these systems under different conditions. In the next chapter, we will take a look at how to simulate these differential equations.
 
+== Exercises
+
 = Numerical Solutions of Differential Equations
 
 #quote(attribution: [Remi (Ratatouille)])[The only thing predictable about life is its unpredictability.]
@@ -658,7 +660,14 @@ $ y(t = Delta t) approx y(t = 0) + Delta t dot f(y(t = 0), 0, p) $
 
 However, we are not done yet. As we now have a numerical value for $y (t = Delta t)$, we can compute its derivative using the differential equation, and compute the next time step $y (t = 2 Delta t)$ using the same principles. What we then get is Euler's method. We can make the equation a bit easier to understand as follows:
 
-$ underbrace(y(t + Delta t), "New value of "y "at time "t+Delta t) = overbrace(y(t), "Current value of "y "at time "t) + underbrace(Delta t, "time step") dot overbrace((upright(d) )/(upright(d) t)(y(t)),"Derivative of "y" at time "t ) $
+$ underbrace(y(t + Delta t), "New value of "y "at time "t+Delta t) = overbrace(y(t), "Current value of "y "at time "t) + underbrace(Delta t, "time step") dot overbrace((upright(d) )/(upright(d) t)(y(t)),"Derivative of "y" at time "t ) $<eq-euler>
+
+A visual explanation of Euler's method can be seen in @euler-method. In the next section, we will see how to manually implement Euler's method in Python.
+
+#figure(
+  image("figures/eulersmethod.png", width: 30%),
+  caption: [Visualization of Euler's method for numerically solving a differential equation. We start at the blue dot and calculate the slope using the differential equation. Given the slope and the blue dot, we can compute the position of the green dot, which is exactly $Delta t$ away from the blue dot. We can then repeat this process starting from the green dot to obtain the purple dot, and so on.]
+) <euler-method>
 
 == Implementing Euler's Method in Python
 The Python code in this section is also included in the notebook `ode-simulation-with-python.ipynb` that is included in the course.
@@ -676,47 +685,74 @@ def dydt(y, t):
   return -y
 ```]<python-ode-simple>
 
-We can now run Euler's method. Observe the following Python code:
-#figure(caption: "Scripted implementation of Euler's method in Python")[
+We can use this function to compute the slope for Euler's method. We start by defining an initial value for $y$ and a time step $Delta t$. 
+
+#figure(caption: "Defining an initial value for $y$ and $Delta t$ for implementing Euler's method.")[
+  ```python
+  # set the time step and the initial value for y
+  delta_t = 0.1
+  y_0 = 1.0
+  ```
+]
+
+We also need to define at which time we need to start, and when we want the algorithm to stop running. Therefore, we define the starting time as $t = 0$ and we solve the differential equation until a time value of $t = 10$. 
+
+#figure(caption: "Defining an initial value for $t$ and the time at which to stop the algorithm")[
+  ```python
+  # set the time to start and to end
+  t = 0
+  t_end = 10
+  ```
+]
+
+We also need to initialize two lists, containing the final solution and the time steps at which the solution has been computed.
+
+#figure(caption: "Initializing the lists of the solution and the corresponding time values, before running the algorithm.")[
+  ```python
+  # initialize the lists of the solution and the corresponding times
+  y = [y_0]
+  time_values = [0]
+  ```
+]
+
+We can now run Euler's method. In this implementation, we use a `while`-loop that looks at the current value for $t$, and stops if it is larger than our set stopping time of $10$. Within the body of the while loop, we take the current value of the solution at time $t$ by taking the last item from the list of the solutions. We use that value and the current value of $t$ to compute the derivative with the function in @python-ode-simple. We then set the new value for $y$ using @eq-euler, and we add the result to the list of $y$ values. We end by incrementing the time value and adding this value to the list of time values. 
+
+#figure(caption: "While-loop solving a differential equation numerically using Euler's method in Python.")[
 ```python
-# set the time step and the initial value for y
-delta_t = 0.1
-y_0 = 1.0
+  while t <= t_end:
+    # get the current value of y
+    y_current = y[-1]
 
-# set the time to start and to end
-t = 0
-t_end = 10
+    # compute the derivative
+    derivative = dydt(y_current, t)
 
-# initialize the lists of the solution and the corresponding times
-y = [y_0]
-time_values = [0]
+    # use euler's method to compute the next value
+    y_new = y_current + delta_t * derivative
 
-while t <= t_end:
-  # get the current value of y
-  y_current = y[-1]
+    # add the next value to the list
+    y.append(y_new)
 
-  # compute the derivative
-  derivative = dydt(y_current, t)
-
-  # use euler's method to compute the next value
-  y_new = y_current + delta_t * derivative
-
-  # add the next value to the list
-  y.append(y_new)
-
-  # increment the time and add it to the saved time values
-  t += delta_t
-  time_values.append(t)
+    # increment the time and add it to the saved time values
+    t += delta_t
+    time_values.append(t)
 ```]<python-euler-scripted>
 
 
 == Numerical Error and More Advanced Methods
-As you may remember from calculus, the approximation given by Taylor polynomials becomes better for values that lie close to the original value. This means that the error of Euler's method for one time step becomes smaller, as the time step gets closer to zero. However, for longer simulations, this also means that we need to take more steps to eventually get to the final time value that we have specified. 
+As you may remember from calculus, the approximation given by Taylor polynomials becomes better for values that lie close to the original value. This means that the error of Euler's method for one time step becomes smaller, as the time step gets closer to zero. However, for longer simulations, this also means that we need to take more steps to eventually get to the final time value that we have specified. We can see the effect of increasing the $Delta t$ value very clearly in @euler-timestep, where we see that for a small time step such as $10^(-3)$, the solution found by Euler's method is very close to the exact solution. For a larger time step of $0.5$, we see that it already deviates quite a bit from the exact solution, especially around the curve between $t = 1$ and $t = 4$. However, increasing the time step even further to $1.5$, we see that the found numerical solution oscillates around to exact solution, which results in a very large error. 
+
+#figure(
+  image("figures/euler.png", width: 60%),
+  caption: [Running Euler's method with different $Delta t$ values. This figure shows that increasing the $Delta t$, also increases the error made by Euler's method.]
+) <euler-timestep>
 
 To improve the numerical solution of differential equations, people have devised methods that give improved estimations with larger time steps, so we can finish simulations faster. Additionally, even more advanced methods use _adaptive time steps_, which means that the time steps are calculated based on the size and the rate of change of the derivative. The details of these methods are beyond the scope of these lecture notes, but in Python, you will make use of these more advanced methods. 
 
 == Solving Differential Equations Numerically with Python
 The Python code in this section is also included in the notebook `ode-simulation-with-python.ipynb` that is included in the course.
+
+== Exercises
+The exercises of this chapter are included in the `ode-simulation-with-python.ipynb` notebook.
 
 = Biological Signalling and Enzymatic Systems
 
