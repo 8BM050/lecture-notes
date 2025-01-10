@@ -624,7 +624,7 @@ Other terms in the system are open-ended, and are either production or consumpti
 
 = Numerical Solutions of Differential Equations
 
-#quote(attribution: [Remi (Ratatouille)])[The only thing predictable about life is its unpredictability.]
+#quote(attribution: [Tiana (The Princess and the Frog)])[The only way to get what you want in this world is through hard work.]
 
 As soon as we have defined the model for our biochemical system using differential equations, we typically also want to calculate the system behavior over time. In specific cases, it is possible to obtain a solution of your differential equation analytically, but in most models, this is typically not possible. For these models, we turn to so-called numerical methods to obtain the solution to differential equations. 
 
@@ -746,17 +746,91 @@ As you may remember from calculus, the approximation given by Taylor polynomials
   caption: [Running Euler's method with different $Delta t$ values. This figure shows that increasing the $Delta t$, also increases the error made by Euler's method.]
 ) <euler-timestep>
 
-To improve the numerical solution of differential equations, people have devised methods that give improved estimations with larger time steps, so we can finish simulations faster. Additionally, even more advanced methods use _adaptive time steps_, which means that the time steps are calculated based on the size and the rate of change of the derivative. The details of these methods are beyond the scope of these lecture notes, but in Python, you will make use of these more advanced methods. 
+To improve the numerical solution of differential equations, people have devised methods that give improved estimations with larger time steps, so we can finish simulations faster. Additionally, even more advanced methods use _adaptive time steps_, which means that the time steps are calculated based on the size and the rate of change of the derivative. Another way of improving the forward Euler method, is to not only take into account the previous value of $y$, but also the value before that, or other values of $y$. Methods that use multiple values of $y$ to calculate the next value are called #emph[multistep] methods. The details of these methods are beyond the scope of these lecture notes, but in Python, you will make use of these more advanced methods. 
 
 == Solving Differential Equations Numerically with Python
 The Python code in this section is also included in the notebook `ode-simulation-with-python.ipynb` that is included in the course.
+
+In this course, we will use the `odeint`-function in the `scipy.integrate` library. By default, this will use a combination of a multistep method, and a method with adaptive time stepping. For solving simple differential equations like the one we have solved before, `odeint` takes the same type of function as in @python-ode-simple. We can solve this using `odeint` by running the example in @python-odeint-simple below.
+
+#figure(caption: "Solving a differential equation using the `odeint` function from `scipy.integrate`.")[
+```python
+from scipy.integrate import odeint
+import numpy as np # import numpy for linspace
+
+# defining the basic ODE as in the previous example
+def dydt(y, t):
+  return -y
+
+# create an array of time points to save the solution at
+time_steps = np.linspace(0,10,100)
+
+# initial y_value
+y_0 = 1
+
+odeint_solution = odeint(dydt, y_0, time_steps)
+```]<python-odeint-simple>
+
+=== Solving systems of ODEs
+As you have seen in the previous chapter, we typically have a system of multiple ODEs which we need to solve simultaneously. Also in this case, `odeint` works in the same way. For example, we can simulate the following system of ODEs:
+$
+&frac(upright(d)[X], upright(d)t) &=& -2 dot [X]^2 \
+&frac(upright(d)[Y], upright(d)t) &=& [X]^2
+$
+
+Now we need to define a function that takes in a list of state-variables containing the current values for $X$ and $Y$, and returns a list of derivatives, containing the derivatives of $X$ and $Y$ in the same order. An example of this function for the system above is shown in @python-system-ode.
+
+#figure(caption: "Defining a system of ODEs in Python.")[
+```python
+def system_ode(u, t):
+  dxdt = -2*u[0]**2
+  dydt = u[0]**2
+  return [dxdt, dydt]
+```]<python-system-ode>
+
+Using this function, we can use the same method as shown in @python-odeint-simple, but of course $u_0$ now needs to be a list of two initial values. 
+
+=== Solving parameterized ODEs
+Another common situation is the inclusion of various parameters in differential equation systems. We can also easily include this option using `odeint`. We first need to add some more parameters to our ODE system. Consider the system defined in Python in @python-system-ode-p. This is the well-known predator-prey, or Lotka-Volterra model.
+
+#figure(caption: "Defining a system of ODEs with parameters in Python.")[
+```python
+def system_ode_p(u, t, a, b, c, d):
+  dxdt = a*u[0] - b*u[0]*u[1]
+  dydt = c*u[0]*u[1] - d*u[1]
+  return [dxdt, dydt]
+```]<python-system-ode-p>
+
+To simulate this system for various values of the parameters $a$, $b$, $c$, and $d$, we can use the `args` option of `odeint`, as in @python-system-ode-p-solve, where we solve this system for two sets of values of these parameters.
+
+#figure(caption: "Solving a system of ODEs with different sets of parameters in Python.")[
+```python
+from scipy.integrate import odeint
+import numpy as np
+
+u_0 = [10, 5]
+time_points = np.linspace(0,10,100)
+a = 0.5
+b = 0.4
+c = 0.1
+d = 0.3
+
+# solve for these parameters
+solution_1 = odeint(system_ode_p, u_0, time_points, args=(a,b,c,d))
+
+a = 0.3
+d = 0.4
+
+# solve for the modified parameters
+solution_2 = odeint(system_ode_p, u_0, time_points, args=(a,b,c,d))
+```]<python-system-ode-p-solve>
 
 == Exercises
 The exercises of this chapter are included in the `ode-simulation-with-python.ipynb` notebook.
 
 = Biological Signalling and Enzymatic Systems
 
-#quote(attribution: [Remi (Ratatouille)])[The only thing predictable about life is its unpredictability.]
+#quote(attribution: [Rafiki (The Lion King)])[Yes, the past can hurt. But the way I see it, you can either run from it or learn from it.]
 
 In chapter 3, we have observed systems of molecules that are produced and consumed according to mass-action kinetics. In this chapter, we will see that we can use the mass-action formalism to model stimulatory and suppressive signals, as well as systems containing enzymes. However, we will also show some assumptions that can be made to simplify the model. 
 
@@ -1039,7 +1113,7 @@ When we have measurements, we also need to couple them to model parameters. If w
 
 = Whole-Body Models
 
-// Add quote :) 
+#quote(attribution: [Woody (Toy Story)])[To infinity and beyond!]
 
 In this book chapter, we will explore a somewhat different application of modeling with differential equations. Instead of focusing on biological processes that occur to natural stimuli, we are now turning to models of how our bodies deal with drugs. This can be divided into two areas of research: pharmacokinetics and pharmacodynamics. The first deals with how the concentrations of drugs in our body change over time after various types of administration and dosing, while the latter involves the study of the biochemical effects of drugs. In short, pharmacokinetics studies what the body does to drugs, while pharmacodynamics focuses on what drugs do to the body. We will be discussing pharmacokinetics, as the components involved in modeling these systems resembles how we approached biological system modeling. Pharmacodynamics however, also requires an understanding of the specific chemical reactions that occur between a drug within the human body, which is beyond the scope of these lecture notes.
 
