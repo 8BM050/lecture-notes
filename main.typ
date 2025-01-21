@@ -481,7 +481,16 @@ This procedure can give us static information about the reaction system we are s
 == The Law of Mass-Action
  To be able to describe concentrations of molecules in a reaction system over time, we need to know at what rate the reaction occurs, besides the stoichiometry of the system. This reaction rate is defined as the amount of molecules that is converted per unit of time. The reaction rate is a row-vector with an entry for each reaction and labelled $v$. 
 
-The reaction rate for each reaction is given by the law of mass-action, which states that the rate of any reaction is directly proportional to the concentrations of our substrates. This means that for the reaction rate, we multiply all substrates together, and multiply this with the basal reaction rate $k$.
+The law of mass-action defines the reaction rate to be proportional to the product of concentrations of reactants. The initial formulation of the law came from research into equilibrium states of reactions. Imagine a simple equilibrium reaction formulated as
+$ a A + b B <--> c C + d D $
+
+At equilibrium, the reaction rate of the forward reaction equals that of the reverse reaction. We can say
+$ k_"f" [A]_"eq"^a [B]_"eq"^b = k_"r" [C]_"eq"^c [D]_"eq"^d $
+
+So the forward reaction rate is the basal reaction rate of the forward reaction $k_"f"$ multiplied by the concentrations of $A$ and $B$, both raised to the power of the stoichiometric constants. The resulting formulation of the law of mass-action relates to the equilibrium constant, which is formulated as
+$ K = k_"f"/f_"r" = ([C]_"eq"^c [D]_"eq"^d)/([A]_"eq"^a [B]_"eq"^b) $
+
+Using this given, we can compute the reaction rate for each reaction using the law of mass-action. This means that for the reaction rate, we multiply all substrates together, and multiply this with the basal reaction rate $k$.
 #set enum(numbering: "1.", indent: 0pt)
 #example[
   1. For the reaction $ A limits(-->)^k B $ We get the reaction rate $v = k[A]$
@@ -855,6 +864,13 @@ $
 
 We can see from the equations that in presence of $X$, molecule $A$ is converted into molecule $B$, which is a form of positive interaction. In this form, we assume that the more of $X$ we have, the quicker $A$ is converted into $B$, without a limit. However, when $X$ is not present, we see no conversion. We can also see this in @linear-stimulation-1, which shows that with increasing value of our stimulatory agent $[X]$, the rate of conversion of $A$ into $B$ increases, but without $X$, we see no conversion happening. 
 
+Another way to write this conversion is to define the rate of the reaction as a function of $[X]$, which we can write as:
+$ A limits(-->)^(K([X])) B $<eq-signal-fun>
+
+with
+
+$ K([X]) = k[X] $
+
 #figure(image("figures/linear_stimulation.png", width: 70%), caption: [Simulation of a linear stimulation model where $A$ is converted into $B$ using a stimulatory agent $X$. The colors indicate the concentrations of this stimulatory agent.])<linear-stimulation-1>
 
 A method to extend this model is to add the possibility for $A$ to spontaneously convert into $B$ without the interaction with $X$. We can do this by adding the reaction:
@@ -866,11 +882,21 @@ $
 &(upright(d)[X]) / (upright(d)t) = 0 \
 $
 
-In this model, we can see that the rate of conversion from $A$ to $B$ is subject to a basal rate $k_"sp"$ and increases linearly with the concentration of $X$.
+In this model, we can see that the rate of conversion from $A$ to $B$ is subject to a basal rate $k_"sp"$ and increases linearly with the concentration of $X$. 
+
+Similarly to the first example, the chemical reaction here can also be written as in @eq-signal-fun, but with $k([X])$ defined as:
+
+$ K([X]) = k[X] + k_"sp" $
 
 === Linear Suppression<linsup>
 
-Besides stimulation, we can also model suppression in a similar way. However, we will need some more tools to do so. A way to model suppression is that we have a reaction where an active form of molecule $A$ is converted into molecule $B$:
+Besides stimulation, we can also model suppression in a similar way. The simplest form of suppression can be achieved by using the formulation as in @eq-signal-fun, and defining the rate as:
+
+$ K([X]) = 1 / (k[X] + k_"sp") $
+
+In this way, as soon as $[X]$ increases, the overall rate decreases. We also need the extra term in the denominator, because otherwise, the reaction rate would go to infinity as soon as $[X]$ approached a value of $0$.
+
+However, we can also be a bit more creative in modelling suppression, but we will need some more tools to do so. Another way to model suppression is that we have a reaction where an active form of molecule $A$ is converted into molecule $B$:
 $ A_"act" limits(-->)^k B $
 Additionally, we introduce a suppressive agent $Y$, which blocks this conversion. This can be modelled by a reaction, mediated by $Y$, that converts our active form of $A$ into an inactive form:
 $ A_"act" + Y limits(-->)^(k_i) A_"inact" + Y $
