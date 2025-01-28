@@ -629,7 +629,61 @@ In the previous part, you may have seen repeated elements in these systems of di
 
 Other terms in the system are open-ended, and are either production or consumption terms, such as the constant production of $[A]$, governed by term $k_1$. In this way, each term in the ODE system can be explained. This explainability is important, as a direct link to the underlying chemical or biological process can be made. Using this knowledge, we can perform targeted hypothesis testing by simulating these systems under different conditions. In the next chapter, we will take a look at how to simulate these differential equations.
 
+#pagebreak()
 == Exercises
+*1. Given is the following system of ordinary differential equations*
+
+$
+&frac(upright(d)[a], upright(d)t) &=& k_(a,0) - [a] lr()(k_(a,1) + k_(a,2)[c]) \
+&frac(upright(d)[b], upright(d)t) &=& k_(a,1)[a] +  k_(a,2)[a][c] - k_(b,0)[b]\
+&frac(upright(d)[c], upright(d)t) &=& k_(b,0)[b] - k_(c,0)[c]
+$
+
+For each term, indicate whether this is a production, or a consumption term.
+
+*2. Given the following sequenctial chemical reactions* 
+
+// #set enum(numbering: "a)", indent: 16pt)
+// + compute the eccentricity of each vertex. 
+// + What is the radius of this graph? 
+// + What is the diameter? 
+// + Which of the vertices are part of the centre?
+$
+E + S &limits(chq)_(k_(-1))^(k_1) C_S limits(->)^(k_2) E + P
+$
+
+Write down the set of differential equations describing this system. Use mass action kinetics.
+
+*3. Given is the following reaction*
+$
+A limits(->)^k emptyset
+$
+
+With $A(t = 0) = 10.0 "mM"$
+
+*a)* Derive and solve the differential equation of this system and show that the concentration of $A$ over time equals:
+$
+A(t) = 10.0 e^(-k t)
+$
+
+*b)* Give the concentration of $A$ at time $t = 5.0$ for $k = 1$, $k = 5$, and $k = 10$. Explain your results.
+
+*4. Given the following chemical reactions* 
+
+// #set enum(numbering: "a)", indent: 16pt)
+// + compute the eccentricity of each vertex. 
+// + What is the radius of this graph? 
+// + What is the diameter? 
+// + Which of the vertices are part of the centre?
+$
+A &limits(->)^(k_1) B \
+B + 2C &limits(chq)_(k_3)^(k_2) D \
+D + C &limits(->)^(k_4) 2A \
+$
+
+*a)* Write down the set of differential equations describing this system. Use mass action kinetics.
+
+*b)* Derive the units for each of the rate constants, assume time has a unit of $s$ and concentration is in $"mM"$.
 
 = Numerical Solutions of Differential Equations
 
@@ -1137,99 +1191,102 @@ When we have measurements, we also need to couple them to model parameters. If w
 
 == Exercises 
 
+#text(fill: red, "The exercises of this chapter are not ready yet. They will be on the next update!")
+
 = Whole-Body Models
 
 #quote(attribution: [Woody (Toy Story)])[To infinity and beyond!]
 
-In this book chapter, we will explore a somewhat different application of modeling with differential equations. Instead of focusing on biological processes that occur to natural stimuli, we are now turning to models of how our bodies deal with drugs. This can be divided into two areas of research: pharmacokinetics and pharmacodynamics. The first deals with how the concentrations of drugs in our body change over time after various types of administration and dosing, while the latter involves the study of the biochemical effects of drugs. In short, pharmacokinetics studies what the body does to drugs, while pharmacodynamics focuses on what drugs do to the body. We will be discussing pharmacokinetics, as the components involved in modeling these systems resembles how we approached biological system modeling. Pharmacodynamics however, also requires an understanding of the specific chemical reactions that occur between a drug within the human body, which is beyond the scope of these lecture notes.
+#text(fill: red, "This chapter is not ready yet. But it will be on the next update!")
+// In this book chapter, we will explore a somewhat different application of modeling with differential equations. Instead of focusing on biological processes that occur to natural stimuli, we are now turning to models of how our bodies deal with drugs. This can be divided into two areas of research: pharmacokinetics and pharmacodynamics. The first deals with how the concentrations of drugs in our body change over time after various types of administration and dosing, while the latter involves the study of the biochemical effects of drugs. In short, pharmacokinetics studies what the body does to drugs, while pharmacodynamics focuses on what drugs do to the body. We will be discussing pharmacokinetics, as the components involved in modeling these systems resembles how we approached biological system modeling. Pharmacodynamics however, also requires an understanding of the specific chemical reactions that occur between a drug within the human body, which is beyond the scope of these lecture notes.
 
-The main principle in pharmacokinetics revolves around the determination of the absorption, distribution, metabolism, and excretion (ADME) of drugs following administration. Applications of this range from determining the dose-response curve of different drugs, and in different physiological and pathological conditions, to determining optimal personalized drug doses. 
+// The main principle in pharmacokinetics revolves around the determination of the absorption, distribution, metabolism, and excretion (ADME) of drugs following administration. Applications of this range from determining the dose-response curve of different drugs, and in different physiological and pathological conditions, to determining optimal personalized drug doses. 
 
-But instead of directly turning to the components of pharmacokinetics, we will first introduce a few basic concepts that are essential to grasp before diving into the details. When administering or prescribing drugs, the main goal is that they are effective, which means that the amount of drug inside someone's system should reach a level where it can be effective. However, it cannot exceed the concentration required to achieve toxicity. Additionally, we may want to minimize the dosage initially, so we will be able to increase it without coming too close to a toxic dose. To be able to produce solutions to these problems, models can be made of the behavior of drugs inside the body. In this section, we will explore modelling concepts that are necessary for building and understanding these models.
+// But instead of directly turning to the components of pharmacokinetics, we will first introduce a few basic concepts that are essential to grasp before diving into the details. When administering or prescribing drugs, the main goal is that they are effective, which means that the amount of drug inside someone's system should reach a level where it can be effective. However, it cannot exceed the concentration required to achieve toxicity. Additionally, we may want to minimize the dosage initially, so we will be able to increase it without coming too close to a toxic dose. To be able to produce solutions to these problems, models can be made of the behavior of drugs inside the body. In this section, we will explore modelling concepts that are necessary for building and understanding these models.
 
-== Compartmental Models
-To describe the distribution of drugs after administration, compartments are used in pharmacokinetics. A compartmental model is also often used in epidemiology, for example to describe disease spread over a population. @Brauer2008 Within a compartment, we assume that we have an instant homogeneous distribution of substrate. The quantity of substrate ($q_i$) within a compartment $i$, can be described according to:
-$ ddt(q_i) = "input"(bold(q), t) - "output"(bold(q), t) $<compartment>
+// == Compartmental Models
+// To describe the distribution of drugs after administration, compartments are used in pharmacokinetics. A compartmental model is also often used in epidemiology, for example to describe disease spread over a population. @Brauer2008 Within a compartment, we assume that we have an instant homogeneous distribution of substrate. The quantity of substrate ($q_i$) within a compartment $i$, can be described according to:
+// $ ddt(q_i) = "input"(bold(q), t) - "output"(bold(q), t) $<compartment>
 
-Where $bold(q)$ is the vector of all masses in all compartments in the system. As opposed to earlier models, observe that in this case, the differential equation describes substrate #emph[quantity] instead of substrate #emph[concentration]. To convert the differential equation to substrate concentration, we will need to divide the quantity by the #emph[volume of distribution] ($V_d$) of the substrate in the compartment. This is not an actual volume but it is the amount of blood that would be required if the drug was evenly distributed over the body at the concentration of the collected sample. As we assume this volume is kept constant, we can freely divide $q_i$ by $V_d$ within @compartment.
+// Where $bold(q)$ is the vector of all masses in all compartments in the system. As opposed to earlier models, observe that in this case, the differential equation describes substrate #emph[quantity] instead of substrate #emph[concentration]. To convert the differential equation to substrate concentration, we will need to divide the quantity by the #emph[volume of distribution] ($V_d$) of the substrate in the compartment. This is not an actual volume but it is the amount of blood that would be required if the drug was evenly distributed over the body at the concentration of the collected sample. As we assume this volume is kept constant, we can freely divide $q_i$ by $V_d$ within @compartment.
 
-=== One-Compartment Model
-The one-compartment model is the simplest compartmental model in pharmacokinetics. As the name implies, it contains a single volume which contains the species or drug of interest. The one-compartment model is effective in describing drugs that are administered intravenously and remain in specific organs that have a high blood perfusion. This compartment typically combines the heart, liver, kidneys and the blood plasma into one #emph[central compartment], as seen in @one-compartment-model. 
+// === One-Compartment Model
+// The one-compartment model is the simplest compartmental model in pharmacokinetics. As the name implies, it contains a single volume which contains the species or drug of interest. The one-compartment model is effective in describing drugs that are administered intravenously and remain in specific organs that have a high blood perfusion. This compartment typically combines the heart, liver, kidneys and the blood plasma into one #emph[central compartment], as seen in @one-compartment-model. 
 
-#figure(image("figures/one-compartment-model.png", width: 40%), caption: [One-compartment model with a central compartment containing the drug, and a single elimination term.])<one-compartment-model>
+// #figure(image("figures/one-compartment-model.png", width: 40%), caption: [One-compartment model with a central compartment containing the drug, and a single elimination term.])<one-compartment-model>
 
-For an IV bolus administration of a dose $D$ at $t = 0$, the one-compartment model equation is given as:
-$ ddt(q(t)) = - k_q q(t) $
-Where $q(0) = D$.
+// For an IV bolus administration of a dose $D$ at $t = 0$, the one-compartment model equation is given as:
+// $ ddt(q(t)) = - k_q q(t) $
+// Where $q(0) = D$.
 
-We can solve this differential equation easily by writing
-$ integral (upright(d)q) / q = -k dot integral upright(d)t $ 
-Which results in
-$ ln(q(t)) = ln(D) - k t \ 
- => q(t) = D e^(-k dot t) $
+// We can solve this differential equation easily by writing
+// $ integral (upright(d)q) / q = -k dot integral upright(d)t $ 
+// Which results in
+// $ ln(q(t)) = ln(D) - k t \ 
+//  => q(t) = D e^(-k dot t) $
 
- An important characteristic for a drug is the elimination half-life, which is defined as the time it takes for the drug amount to become half of its initial concentration. As $V_d$ is constant, half the concentration means half the amount of drug delivered, so we can derive a formula for this using
- $ q(t_(1 slash 2)) &= D e^(-k dot t_(1 slash 2)) = D/2 \
- &=> k dot t_(1 slash 2) = ln(2) \
- &=> t_(1 slash 2) = ln(2)/k $
+//  An important characteristic for a drug is the elimination half-life, which is defined as the time it takes for the drug amount to become half of its initial concentration. As $V_d$ is constant, half the concentration means half the amount of drug delivered, so we can derive a formula for this using
+//  $ q(t_(1 slash 2)) &= D e^(-k dot t_(1 slash 2)) = D/2 \
+//  &=> k dot t_(1 slash 2) = ln(2) \
+//  &=> t_(1 slash 2) = ln(2)/k $
 
-To test whether a drug concentration after IV bolus injection can be modelled using a one-compartment model, we can plot the log-concentration value over time and inspect whether it has a linear slope. If the points at the low and high concentration values deviate from a linear slope, this may be reason to suspect that more compartments are necessary. However, this can also occur when the measuring equipment has a lower accuracy in specific low or high concentrations, or when the measurement device nears its limit of detection, which is the lowest concentration of drug that the test can measure.
+// To test whether a drug concentration after IV bolus injection can be modelled using a one-compartment model, we can plot the log-concentration value over time and inspect whether it has a linear slope. If the points at the low and high concentration values deviate from a linear slope, this may be reason to suspect that more compartments are necessary. However, this can also occur when the measuring equipment has a lower accuracy in specific low or high concentrations, or when the measurement device nears its limit of detection, which is the lowest concentration of drug that the test can measure.
 
-=== Two-Compartment Model
-The most commonly used pharamcokinetic compartmental model is the two-compartment model. As the name indicates, this model contains two volumes where the drug can reside in. As in the one-compartment model, this model contains the central compartment, but it also contains a #emph[peripheral compartment]. While the compartments in this model have no direct physiological meaning, a reasonable assumption is to think of the central compartment as the highly-perfused tissues, where the drug administered spreads rapidly, while the peripheral compartment represents the tissues with a lower perfusion rate, such as the bone or the adipose tissue. 
+// === Two-Compartment Model
+// The most commonly used pharamcokinetic compartmental model is the two-compartment model. As the name indicates, this model contains two volumes where the drug can reside in. As in the one-compartment model, this model contains the central compartment, but it also contains a #emph[peripheral compartment]. While the compartments in this model have no direct physiological meaning, a reasonable assumption is to think of the central compartment as the highly-perfused tissues, where the drug administered spreads rapidly, while the peripheral compartment represents the tissues with a lower perfusion rate, such as the bone or the adipose tissue. 
 
-#figure(image("figures/two-compartment-model.png", width: 40%), caption: [Two-compartment model with a central and a peripheral compartment containing the drug, which have exchange terms and the central compartment has an elimination term.])<two-compartment-model>
+// #figure(image("figures/two-compartment-model.png", width: 40%), caption: [Two-compartment model with a central and a peripheral compartment containing the drug, which have exchange terms and the central compartment has an elimination term.])<two-compartment-model>
 
-For an IV-bolus, the ODE system of the two-compartment model is
-$ 
-&ddt(q_1(t)) = -(k_0 + k_1) q_1(t) + k_2 q_2(t) \ 
-&ddt(q_2(t)) = k_1 q_1(t) - k_2 q_2(t)
-$
+// For an IV-bolus, the ODE system of the two-compartment model is
+// $ 
+// &ddt(q_1(t)) = -(k_0 + k_1) q_1(t) + k_2 q_2(t) \ 
+// &ddt(q_2(t)) = k_1 q_1(t) - k_2 q_2(t)
+// $
 
-The solution of this model is more difficult, and requires the Laplace transform, which is beyond the scope of these lecture notes. Nevertheless, the solution for the central compartment is given by
+// The solution of this model is more difficult, and requires the Laplace transform, which is beyond the scope of these lecture notes. Nevertheless, the solution for the central compartment is given by
 
-$ q_1(t) = C_1 e^(-alpha t) + C_2 e^(-beta t) $
+// $ q_1(t) = C_1 e^(-alpha t) + C_2 e^(-beta t) $
 
-The constants $C_1$, $C_2$, $alpha$ and $beta$ are not in the original model equations, but can be calculated from them. $alpha$ and $beta$ are known as the #emph[macro]-rate constants. The four constants are related to the original model parameters as
-$ 
-alpha + beta = k_0 + k_1 + k_2 \
-alpha dot beta = k_2 dot k_0 \
-C_1 = (D_0 (alpha - k_2)) / (alpha - beta) \
-C_2 = (D_0 (k_2 - beta)) / (alpha - beta)
-$
-Where $D_0$ is the initial bolus IV dose. 
+// The constants $C_1$, $C_2$, $alpha$ and $beta$ are not in the original model equations, but can be calculated from them. $alpha$ and $beta$ are known as the #emph[macro]-rate constants. The four constants are related to the original model parameters as
+// $ 
+// alpha + beta = k_0 + k_1 + k_2 \
+// alpha dot beta = k_2 dot k_0 \
+// C_1 = (D_0 (alpha - k_2)) / (alpha - beta) \
+// C_2 = (D_0 (k_2 - beta)) / (alpha - beta)
+// $
+// Where $D_0$ is the initial bolus IV dose. 
 
-From the equations, one can see that the drug clearance essentially has two phases. We have the fast-phase, which is controlled by $C_1$ and $alpha$, and the slow phase, controlled by $C_2$ and $beta$. Each of these phases also has their own half-life, which are named the distribution and elimination half-life respectively:
+// From the equations, one can see that the drug clearance essentially has two phases. We have the fast-phase, which is controlled by $C_1$ and $alpha$, and the slow phase, controlled by $C_2$ and $beta$. Each of these phases also has their own half-life, which are named the distribution and elimination half-life respectively:
 
-$ t_(1 slash 2, alpha) = ln(2)/alpha \
-t_(1 slash 2, beta) = ln(2)/beta $
+// $ t_(1 slash 2, alpha) = ln(2)/alpha \
+// t_(1 slash 2, beta) = ln(2)/beta $
 
-The reported half life of a drug adhering to two-compartmental kinetics is often only one value, which corresponds to the slowest of the two. 
+// The reported half life of a drug adhering to two-compartmental kinetics is often only one value, which corresponds to the slowest of the two. 
 
-// TODO: Add figures
+// // TODO: Add figures
 
-=== Physiologically-Based Pharmacokinetic Models
-In traditional pharmacokinetic models, mainly one and two-compartment models are used, with some models containing more compartments, for example when a specific tissue of interest is modelled separately. However, when more detailed information is desired, we can turn to so-called _Physiologically-based pharmacokinetic_ (PBPK) models. These models contain separate compartments for many tissues in the body, and separate arterial and venous blood as compartments. @4cpbpk shows a four-compartment PBPK model. Each of these compartments has its own rate equations, describing the blood flow through a tissue and the metabolism happening. 
+// === Physiologically-Based Pharmacokinetic Models
+// In traditional pharmacokinetic models, mainly one and two-compartment models are used, with some models containing more compartments, for example when a specific tissue of interest is modelled separately. However, when more detailed information is desired, we can turn to so-called _Physiologically-based pharmacokinetic_ (PBPK) models. These models contain separate compartments for many tissues in the body, and separate arterial and venous blood as compartments. @4cpbpk shows a four-compartment PBPK model. Each of these compartments has its own rate equations, describing the blood flow through a tissue and the metabolism happening. 
 
-#figure(image("figures/4-comp-pbpk.png", width: 50%), caption: [A four-compartment PBPK model, showing various routes of administration, such as through inhalation, IV, or oral.])<4cpbpk>
+// #figure(image("figures/4-comp-pbpk.png", width: 50%), caption: [A four-compartment PBPK model, showing various routes of administration, such as through inhalation, IV, or oral.])<4cpbpk>
 
-The general form of a rate equation for a molecule $A$ in compartment $x$ PBPK model is
+// The general form of a rate equation for a molecule $A$ in compartment $x$ PBPK model is
 
-$ ddt(A_x) = Q_x dot (A_"art" - A_x slash P_x - M_x (A_x)) / (V_x) $
+// $ ddt(A_x) = Q_x dot (A_"art" - A_x slash P_x - M_x (A_x)) / (V_x) $
 
-Where $A_"art"$ is the concentration in the arterial blood, $Q_x$ is the blood flow through compartment $x$, $V_x$ is the volume of the compartment $x$ and $P_x$ is called the partition coefficient for compartment $x$, which describes how long a molecule remains in a specific compartment. A low partition coefficient means that a molecule disappears quickly from a tissue, while a high partition coefficient indicates that a molecule remains in a tissue for a longer time. Finally, $M_x (A)$ is the metabolism rate of molecule $A$ in the specific compartment. This metabolism can for example be described using michaelis-menten kinetics, while taking into account the volume and partition coefficient of the specific organ:
+// Where $A_"art"$ is the concentration in the arterial blood, $Q_x$ is the blood flow through compartment $x$, $V_x$ is the volume of the compartment $x$ and $P_x$ is called the partition coefficient for compartment $x$, which describes how long a molecule remains in a specific compartment. A low partition coefficient means that a molecule disappears quickly from a tissue, while a high partition coefficient indicates that a molecule remains in a tissue for a longer time. Finally, $M_x (A)$ is the metabolism rate of molecule $A$ in the specific compartment. This metabolism can for example be described using michaelis-menten kinetics, while taking into account the volume and partition coefficient of the specific organ:
 
-$ M_x (A_x) = V_"max" (A_x slash P_x) / (K_m  + A_x slash P_x) $
+// $ M_x (A_x) = V_"max" (A_x slash P_x) / (K_m  + A_x slash P_x) $
 
-== Modeling Delays
+// == Modeling Delays
 
-== Administration Routes
-Besides compartments that describe the concentrations over time within the body, different routes of administration may also lead to variations in appearance profiles of the drugs. For example, if a drug is administered intravenously, the full dose ends up in the blood stream, while an orally dosed drug may not be fully absorbed by the gastrointestinal tract, leading to a lower absorbed dose. To ensure correct dosage and to prevent toxicity, an accurate representation of drug appearance for different administration routes is critical. In this section, we'll explore the modelling of these routes of administration. 
+// == Administration Routes
+// Besides compartments that describe the concentrations over time within the body, different routes of administration may also lead to variations in appearance profiles of the drugs. For example, if a drug is administered intravenously, the full dose ends up in the blood stream, while an orally dosed drug may not be fully absorbed by the gastrointestinal tract, leading to a lower absorbed dose. To ensure correct dosage and to prevent toxicity, an accurate representation of drug appearance for different administration routes is critical. In this section, we'll explore the modelling of these routes of administration. 
 
-== Outcome Measures
+// == Outcome Measures
 
-== Examples
+// == Examples
 
-== Exercises
+// == Exercises
 
 #bibliography("bib-refs.bib")
