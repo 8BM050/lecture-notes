@@ -32,8 +32,8 @@
 
 #show figure.caption: set align(left)
 #show figure.caption: c => [#text(size: 10pt)[
-  #text(fill: orange, weight: "bold")[
-    #c.supplement #c.counter.display(c.numbering)
+  #text(fill: orange, weight: "bold")[ 
+  #c.supplement #context c.counter.display(c.numbering)
   ]
   #c.separator#c.body
 ]]
@@ -95,12 +95,6 @@
 
 #set quote(block: true, quotes: true)
 
-// #let example(it) = block(fill: rgb(255,215,181, 30%), stroke: rgb(255,215,181, 100%), inset: 16pt, radius: 8pt, above: 24pt, below: 24pt,[
-//   #c.step()
-//   *Example #context c.display())* \
-//   #it
-// ])
-
 #set math.equation(numbering: "(1)")
 
 #show link: underline
@@ -112,6 +106,25 @@
 #let chq = symbol(
   "⇌"
 )
+
+
+#heading(level: 3, numbering: none,
+"Lecture Notes for the course 8BM050")
+
+Version: 2024-2025
+
+Authors: Max de Rooij
+
+*Eindhoven University of Technology* \ _Department of Biomedical Engineering_, Computational Biology
+
+#heading(level: 4, numbering: none,
+"Acknowledgements")
+
+Cover image by: #link("https://bvof.nl")[Bart van Overbeeke Photography]
+
+Parts of these lecture notes, in particular the first chapter on dynamic models, have been based on the lecture notes on simulation of biochemical systems by prof. Huub ten Eikelder.
+
+The chapter on graph theory has partially been based on the lectures from prof. Peter Hilbers on biological graph theory for the systems medicine course.  
 
 = Introduction to Systems Biology
 
