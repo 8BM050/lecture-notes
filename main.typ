@@ -1095,12 +1095,22 @@ The difference is that we have introduced an additional term $n$, in the exponen
 For $n=1$, this equation is equal to the Michaelis-Menten kinetics. This value $n$ is linked to the cooperativity of the reaction. A value of $n$ in between 0 and 1 indicates a negative cooperativity, while a value for $n > 1$ indicates positive cooperativity.
 
 #subpar.grid(
-  figure(image("figures/hill_rates.png", width: 60%), caption: ""), <hill-a>,
-  figure(image("figures/hill_ode.png", width: 60%), caption: ""), <hill-b>,
+  figure(image("figures/hill_rates.png", width: 55%), caption: ""), <hill-a>,
+  figure(image("figures/hill_ode.png", width: 55%), caption: ""), <hill-b>,
   columns: (1fr, 1fr),
   caption: [Simulation of Hill kinetics for various values of $n$. *(a)* The reaction rate according to Hill kinetics as a function of the substrate concentration, compared to the value of $V_"max"$. *(b)* Simulation of product formation according to Hill kinetics.],
   label: <hill>,
 )
+
+==== Modelling Gene Regulation
+For gene transcription, regulation often occurs through transcription factors. In many cases, the binding of these transcription factors to DNA occurs cooperatively, and can therefore be modelled using Hill kinetics. However, besides stimulating transcription, transcriptional regulation also occurs in an #emph[inhibitory] fashion. The inhibitory version of the Hill equation is given by
+
+$ ddt([P]) = V_"max" (K_M)^n / ((K_M)^n + [S]^n) $
+
+From this equation, we can see that an increase in binding of substrate reduces the formation of product, or in this case, transcription of genes. In gene regulatory networks, often many combinations of transcription factors play a role, which results in a combination of many transcription factors and therefore results in very large models. For these types of networks, #emph[boolean] models are often used, which are simulated much more quickly. The downside of these models is that the gradual change in stimulation or inhibition is difficult to capture using boolean logic models. 
+
+Another option is to transform these boolean models into a continuous model, as described in @wittmann_transforming_2009. In this technique, stimulatory and inhibitory hill functions are combined according to logic rules. However, further discussion of this topic is beyond the scope of these lecture notes.
+
 
 === Feedback Loops
 Combining these regulatory mechanisms that are present in models of biological systems often leads to feedback loops appearing. A feedback loop is a specific regulatory pattern that dictates how components of a system interact over time. They are an important component of many biological systems and are required for a system to return to its original state after an external influence, or cause repetitive behavior to occur. 
@@ -1204,24 +1214,96 @@ When we have measurements, we also need to couple them to model parameters. If w
 
 == Exercises 
 
-#text(fill: red, "The exercises of this chapter are not ready yet. They will be on the next update!")
+*1. Given is the following system of ordinary differential equations*
+
+$
+&frac(upright(d)[a], upright(d)t) &=& k_(a,0) - [a] lr()(k_(a,1) + k_(a,2)[c]) \
+&frac(upright(d)[b], upright(d)t) &=& k_(a,1)[a] +  k_(a,2)[a][c] - k_(b,0)[b]\
+&frac(upright(d)[c], upright(d)t) &=& k_(b,0)[b] - k_(c,0)[c]
+$
+
+#set enum(numbering: "a)", indent: 16pt)
++ Explain why $c$ acts as a stimulatory agent.
++ Express the steady-state concentrations of $a$, $b$, and $c$ using the parameters of this system.
++ Change the model equations such that $c$ is a suppressive agent.
++ Express the steady-state concentrations of $a$, $b$, and $c$ using the parameters of the suppressive system.
+
+
+*2. Given the following description of a dynamic model*
+
+We have two species, labelled $X$ and $Y$. Species $X$ is produced constantly at a rate $k_x$. Species $Y$ is a dimer of species $X$, which forms breaks apart spontaneously. The basal formation rate $k_f$ is equal to the rate of breaking apart $k_b$. This dimer can also break apart differently at rate $k_(b,2)$, forming molecules
+$A$ and $B$, which are removed from the system at rates $k_a$ and $k_b$ respectively.
+
+#set enum(numbering: "a)", indent: 16pt)
++ Write down the differential equations of the system described in this piece of text.
+
+A third molecule $Z$ acts as a suppressant of the process of breaking apart, by binding to the dimer $Y$ with a rate $k_z$, which results in a more stable molecular complex. $Z$ can also unbind from $Y$, for which the basal rate is only 25% of the binding rate.
+$Z$ is not produced or broken down otherwise.
+
+#set enum(numbering: "a)", indent: 16pt, start: 2)
++ Adapt the differential equations to accomodate this description.
+
+*3. Antidiuretic Hormone (ADH)*
+
+Antidiuretic hormone (ADH), also called vasopressin, is a hormone that regulates water balance in the body. It acts on the kidneys to reduce the amount of water excreted in the urine. ADH acts by binding to a transmembrane receptor
+that activates a cascade resulting in the membrane trafficking of aquaporin channels, allowing for the resorption of water in the kidneys. A model by Fröhlich et al. @frohlich_systems_2010 describes the trafficking of aquaporin channels. The model equations are as follows:
+
+$
+ddt(["PKA"]) &= -k_3 dot ["PKA"] dot ["cAMP"] + k_4 dot ["PKA"_a] \
+ddt(["PKA"_a]) &= k_3 dot ["PKA"] dot ["cAMP"] - k_4 dot ["PKA"_a] \ 
+ddt(["cAMP"]) &= k_1 dot ["ADH"] - k_2 dot ["cAMP"] dot ["PKA"_a] - k_3 dot ["PKA"] dot ["cAMP"] \
+& + k_4 dot ["PKA"_a] - k_7 dot ["cAMP"] \
+ddt(["AQP"]) &= -k_5 dot ["AQP"] dot ["PKA"_a] + k_6 dot ["AQP"_m] - k_8 dot ["AQP"] \
+ddt(["AQP"_m]) &= k_5 dot ["AQP"] dot ["PKA"_a] - k_6 dot ["AQP"_m] + k_8 dot ["AQP"] \
+ddt(["ADH"]) &= -k_9 dot ["ADH"]^2
+$
+
+#set enum(numbering: "a)", indent: 16pt, start:1)
++ Based on this model, explain how ADH stimulates the movement of aquaporin channels to the membrane.
++ Cyclic AMP ($["cAMP"]$) is involved in negative feedback loop. Explain this.
++ In absence of AHD, the aquaporin trafficking is in steady-state. Express $k_8$ using $k_6$ and the steady-state concentrations of membrane and cytosol AQP.
+
+
+*4. Michaelis-Menten Kinetics*
+#set enum(numbering: "a)", indent: 16pt, start:1)
++ Explain in words the meaning of the michaelis menten constant $K_M$. 
++ In some models, enzymatic reactions can be approximated by linear kinetics. Under what circumstance is this appropriate?
+
+*5. Reversible Inhibition* 
+
+For each type of inhibition, explain the change in apparent $K_M$ and $V_"max"$ based on the mechanism of inhibition.
 
 = Whole-Body Models
 
 #quote(attribution: [Woody (Toy Story)])[To infinity and beyond!]
 
-#text(fill: red, "This chapter is not ready yet. But it will be on the next update!")
-// In this book chapter, we will explore a somewhat different application of modeling with differential equations. Instead of focusing on biological processes that occur to natural stimuli, we are now turning to models of how our bodies deal with drugs. This can be divided into two areas of research: pharmacokinetics and pharmacodynamics. The first deals with how the concentrations of drugs in our body change over time after various types of administration and dosing, while the latter involves the study of the biochemical effects of drugs. In short, pharmacokinetics studies what the body does to drugs, while pharmacodynamics focuses on what drugs do to the body. We will be discussing pharmacokinetics, as the components involved in modeling these systems resembles how we approached biological system modeling. Pharmacodynamics however, also requires an understanding of the specific chemical reactions that occur between a drug within the human body, which is beyond the scope of these lecture notes.
+In this book chapter, we will explore the application of modelling with differential equations on the scale of the whole human body. With this, we mean the interaction of several organs and organ systems on a macro scale. A large application of these whole-body models lies in pharmacology, where simplified models of humans are used to describe the absorption, distribution, metabolism, and excretion (ADME) of drugs. However, the content here in this chapter is applicable to modelling as a whole. 
 
-// The main principle in pharmacokinetics revolves around the determination of the absorption, distribution, metabolism, and excretion (ADME) of drugs following administration. Applications of this range from determining the dose-response curve of different drugs, and in different physiological and pathological conditions, to determining optimal personalized drug doses. 
+Before we dive into actual building of models, however, we will first discuss some more fundamental concepts to complete our dynamic modelling toolbox. The first of these concepts is the concept of compartmental models, which are widely used in the study of pharmacokinetics to describe drug concentrations after administration. In short, pharmacokinetics studies what the body does to drugs, while pharmacodynamics focuses on what drugs do to the body. We will be discussing pharmacokinetics, as the components involved in modeling these systems resembles how we approached biological system modeling. A different field of study, is pharmacodynamics, where the drug effects on measurable quantities are modelled, such as the effect of a drug on the heart rate, or body temperature. 
 
-// But instead of directly turning to the components of pharmacokinetics, we will first introduce a few basic concepts that are essential to grasp before diving into the details. When administering or prescribing drugs, the main goal is that they are effective, which means that the amount of drug inside someone's system should reach a level where it can be effective. However, it cannot exceed the concentration required to achieve toxicity. Additionally, we may want to minimize the dosage initially, so we will be able to increase it without coming too close to a toxic dose. To be able to produce solutions to these problems, models can be made of the behavior of drugs inside the body. In this section, we will explore modelling concepts that are necessary for building and understanding these models.
+These pharmacokinetic models are very useful, as when administering or prescribing drugs, the main goal is that they are effective, which means that the amount of drug inside someone's system should reach a level where it #emph[can] be effective. However, it cannot exceed the concentration required to achieve toxicity. Additionally, we may want to minimize the dosage initially, so we will be able to increase it without coming too close to a toxic dose. To be able to produce solutions to these problems, models can be made of the behavior of drugs inside the body. In this section, we will also explore modelling concepts that are necessary for building and understanding these models.
 
+== Compartmental Models
+In modelling, a compartment is a separate body containing a specific species in the system. To describe the distribution of drugs after administration, compartments are used in pharmacokinetics. A compartmental model is also often used in epidemiology, for example to describe disease spread over a population. @Brauer2008 Within a compartment, we assume that we have an instant homogeneous distribution of substrate. The quantity of substrate ($c_i$) within a compartment $i$, can be described according to:
+$ ddt(c_i) = "input"(bold(c), t) - "output"(bold(c), t) $<compartment>
+
+Where $bold(c)$ is the vector of all concentrations in all compartments in the system. As opposed to earlier models, observe that in this case, the differential equation describes substrate #emph[quantity] instead of substrate #emph[concentration]. To convert the differential equation to substrate concentration, we will need to divide the quantity by the #emph[volume of distribution] ($V_d$) of the substrate in the compartment. This is not an actual volume but it is the amount of blood that would be required if the drug was evenly distributed over the body at the concentration of the collected sample. As we assume this volume is kept constant, we can freely divide $q_i$ by $V_d$ within @compartment.
+
+=== One-Compartment Model
+
+=== Two-Compartment Model
+
+=== Multi-Compartment Models
+
+=== Compartments as Delays
+
+== Modelling methods of administration
+
+== Modelling repeated doses
+
+== Building models with Word Equations
 // == Compartmental Models
-// To describe the distribution of drugs after administration, compartments are used in pharmacokinetics. A compartmental model is also often used in epidemiology, for example to describe disease spread over a population. @Brauer2008 Within a compartment, we assume that we have an instant homogeneous distribution of substrate. The quantity of substrate ($q_i$) within a compartment $i$, can be described according to:
-// $ ddt(q_i) = "input"(bold(q), t) - "output"(bold(q), t) $<compartment>
 
-// Where $bold(q)$ is the vector of all masses in all compartments in the system. As opposed to earlier models, observe that in this case, the differential equation describes substrate #emph[quantity] instead of substrate #emph[concentration]. To convert the differential equation to substrate concentration, we will need to divide the quantity by the #emph[volume of distribution] ($V_d$) of the substrate in the compartment. This is not an actual volume but it is the amount of blood that would be required if the drug was evenly distributed over the body at the concentration of the collected sample. As we assume this volume is kept constant, we can freely divide $q_i$ by $V_d$ within @compartment.
 
 // === One-Compartment Model
 // The one-compartment model is the simplest compartmental model in pharmacokinetics. As the name implies, it contains a single volume which contains the species or drug of interest. The one-compartment model is effective in describing drugs that are administered intravenously and remain in specific organs that have a high blood perfusion. This compartment typically combines the heart, liver, kidneys and the blood plasma into one #emph[central compartment], as seen in @one-compartment-model. 
