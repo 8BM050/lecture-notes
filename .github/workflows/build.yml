@@ -22,6 +22,7 @@ jobs:
         with:
           source_file: |
             main.typ
+          version: 0.12.0
             
       - name: Upload PDF file
         uses: actions/upload-artifact@v4
