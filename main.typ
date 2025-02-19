@@ -336,7 +336,7 @@ In @example-reaction-graphs, the three types of biochemical graphs are shown for
     & R_3: #h(50%) 2D -> E $
 
 #subpar.grid(
-  figure(image("figures/Example-met-graph.png", width: 100%), caption: "Substrate graph"), <example-reaction-graphs-a>,
+  figure(image("figures/met-graph.png", width: 100%), caption: "Substrate graph"), <example-reaction-graphs-a>,
   figure(image("figures/Example-reac-graph.png", width: 60%), caption: "Reaction graph"), <example-reaction-graphs-b>,
   figure(image("figures/Example-metreac-graph.png", width: 100%), caption: "Substrate-reaction graph"), <example-reaction-graphs-c>,
   columns: (1fr, 1fr, 1fr),
@@ -1290,80 +1290,168 @@ $ ddt(c_i) = "input"(bold(c), t) - "output"(bold(c), t) $<compartment>
 Where $bold(c)$ is the vector of all concentrations in all compartments in the system. As opposed to earlier models, observe that in this case, the differential equation describes substrate #emph[quantity] instead of substrate #emph[concentration]. To convert the differential equation to substrate concentration, we will need to divide the quantity by the #emph[volume of distribution] ($V_d$) of the substrate in the compartment. This is not an actual volume but it is the amount of blood that would be required if the drug was evenly distributed over the body at the concentration of the collected sample. As we assume this volume is kept constant, we can freely divide $q_i$ by $V_d$ within @compartment.
 
 === One-Compartment Model
+The one-compartment model is the simplest compartmental model. As the name implies, it contains a single volume which contains the species or drug of interest. The one-compartment model is effective in describing intravenously administered species and remain in specific organs that have a high blood perfusion. This compartment typically combines the heart, liver, kidneys and the blood plasma into one #emph[central compartment], as seen in @one-compartment-model. 
+
+#figure(image("figures/one-compartment-model.png", width: 40%), caption: [One-compartment model with a central compartment containing the drug, and a single elimination term.])<one-compartment-model>
+
+For an IV bolus administration of a dose $D$ at $t = 0$, the one-compartment model equation is given as:
+$ ddt(c(t)) = - k_c c(t) $
+Where $c(0) = D / V_d$.
+
+Note that we divide the dose by the compartment volume $V_d$, or volume of distribution, to obtain the initial concentration.
+
+We can solve this differential equation easily by writing
+$ integral (upright(d)c) / c = -k_c dot integral upright(d)t $ 
+Which results in
+$ ln(c(t)) = ln(D/V_d) - k_c t \ 
+ => c(t) = D/V_d e^(-k_c dot t) $
+
+ An important characteristic is the elimination half-life, which is defined as the time it takes for the species amount to become half of its initial concentration. As $V_d$ is constant, half the concentration means half the amount of drug delivered, so we can derive a formula for this using
+ $ c(t_(1 slash 2)) &= D/V_d e^(-k_c dot t_(1 slash 2)) = D/(2 V_d) \
+ &=> k_c dot t_(1 slash 2) = ln(2) \
+ &=> t_(1 slash 2) = ln(2)/k_c $
+
+To test whether a species concentration after IV bolus injection can be modelled using a one-compartment model, we can plot the log-concentration value over time and inspect whether it has a linear slope. If the points at the low and high concentration values deviate from a linear slope, this may be reason to suspect that more compartments are necessary. However, this can also occur when the measuring equipment has a lower accuracy in specific low or high concentrations, or when the measurement device nears its limit of detection, which is the lowest concentration that the test can measure.
 
 === Two-Compartment Model
+One of the most commonly used compartmental models is the two-compartment model. As the name indicates, this model contains two volumes where the species can reside in. As in the one-compartment model, this model contains the central compartment, but it also contains a #emph[peripheral compartment]. While the compartments in this model have no direct physiological meaning, a reasonable assumption is to think of the central compartment as the highly-perfused tissues, where the administered substance spreads rapidly, while the peripheral compartment represents the tissues with a lower perfusion rate, such as the bone or the adipose tissue. 
+
+#figure(image("figures/two-compartment-model.png", width: 40%), caption: [Two-compartment model with a central and a peripheral compartment containing the drug, which have exchange terms and the central compartment has an elimination term.])<two-compartment-model>
+
+For an IV-bolus, the ODE system of the two-compartment model is
+$ 
+&ddt(c_1(t)) = -(k_0 + k_1) c_1(t) + k_2 c_2(t) \ 
+&ddt(c_2(t)) = k_1 c_1(t) - k_2 c_2(t)
+$
+
+The solution of this model is more difficult, and requires the Laplace transform, which is beyond the scope of these lecture notes. Nevertheless, the solution for the central compartment is given by
+
+$ c_1(t) = C_1 e^(-alpha t) + C_2 e^(-beta t) $
+
+The constants $C_1$, $C_2$, $alpha$ and $beta$ are not in the original model equations, but can be calculated from them. $alpha$ and $beta$ are known as the #emph[macro]-rate constants. The four constants are related to the original model parameters as
+$ 
+alpha + beta = k_0 + k_1 + k_2 \
+alpha dot beta = k_2 dot k_0 \
+C_1 = (D_0/V_d (alpha - k_2)) / (alpha - beta) \
+C_2 = (D_0/V_d (k_2 - beta)) / (alpha - beta)
+$
+Where $D_0$ is the initial bolus IV dose and $V_d$ is the distribution volume of the central compartment. 
+
+From the equations, one can see that the clearance essentially has two phases. We have the fast-phase, which is controlled by $C_1$ and $alpha$, and the slow phase, controlled by $C_2$ and $beta$. Each of these phases also has their own half-life, which are named the distribution and elimination half-life respectively:
+
+$ t_(1 slash 2, alpha) = ln(2)/alpha \
+t_(1 slash 2, beta) = ln(2)/beta $
+
+For drugs adhering to two-compartmental kinetics, the reported half-life is often only one value, which corresponds to the slowest of the two. 
 
 === Multi-Compartment Models
+When talking about more than two compartments, we typically refer to a model as a multi-compartment model. An example of a commonly used multi-compartment model is the physiologically-based pharmacokinetic (PBPK) model. These models typically also consider blood flow and perfusion of various organs and tissues in a very detailed way. Because of their detail, they can 
+be used to perform detailed modelling experiments. Other examples multi-compartment models are the Eindhoven Diabetes Education Simulator (EDES) @maas_physiology-based_2015, the Sips model of lipoprotein distributions @sips_computational_2014, and the Mixed Meal Model @odonovan_quantifying_2022, which also includes triglyceride and free fatty acid kinetics. In @4cpbpk, you can see a schematic example of 
+a large PBPK model with some example compartments. This model contains seven compartments in total: five tissue compartments, and two plasma compartments. 
+
+Additionally, various routes of administration are shown in this figure. In a later section of this chapter, we will dive into modelling these different routes of administration.
+#figure(image("figures/4-comp-pbpk.png", width: 50%), caption: [A seven-compartment PBPK model, showing various routes of administration, such as through inhalation, IV, or oral.])<4cpbpk>
 
 === Compartments as Delays
+In some models, compartments can be used to represent delays in the system. This is particularly useful when modeling processes that have a time lag between the input and the observable output. For example, in pharmacokinetics, the absorption of a drug into the bloodstream after oral administration can be delayed due to the time it takes for the drug to dissolve and pass through the gastrointestinal tract.
 
-== Modelling methods of administration
+To model this delay, we can use a series of compartments that the drug must pass through sequentially before reaching the central compartment. Each compartment represents a stage in the delay process, and the drug moves from one compartment to the next at a certain rate. This approach is known as the compartmental delay model.
+
+Consider a simple example where a drug is administered orally and must pass through two compartments (representing the stomach and intestines) before reaching the bloodstream. The model can be described by the following differential equations:
+
+$
+&ddt(c_1(t)) = -k_1 c_1(t) \ 
+&ddt(c_2(t)) = k_1 c_1(t) - k_2 c_2(t) \ 
+&ddt(c_3(t)) = k_2 c_2(t) - k_3 c_3(t)
+$
+
+Here, $c_1(t)$ represents the concentration of the drug in the stomach, $c_2(t)$ represents the concentration in the intestines, and $c_3(t)$ represents the concentration in the bloodstream. The rate constants $k_1$, $k_2$, and $k_3$ determine the rate at which the drug moves between compartments.
+
+By using compartments as delays, we can more accurately model the time-dependent behavior of drug absorption and distribution in the body. This approach can also be applied to other biological processes where delays are present, such as hormone release and signal transduction pathways.
+
+It is important to remember that these compartments do not always have a strict physiological origin. While in PBPK models, compartments can be easily related to specific tissues, delay compartments may have no direct physiological meaning at all. For example, in a hormone release pathway, there can be
+a delay between the external stimulus and the hormone release. While no compartments are involved, it could be beneficial to model this temporal lag using an additional compartment.
+== Modelling Methods of Administration
+
+When modeling the administration of substances, such as drugs or food, we need to consider the different routes through which these substances enter the body. Each route of administration has unique characteristics that affect the absorption, distribution, metabolism, and excretion of the substance. Below, we provide examples of how to model different routes of administration using differential equations.
+
+=== Intravenous (IV) Administration
+
+Intravenous administration involves directly injecting the substance into the bloodstream. This route ensures immediate availability of the substance in the central compartment (blood plasma). The differential equation for an IV bolus administration is straightforward:
+
+$ ddt(c(t)) = - k_e c(t) $
+
+Where:
+- $c(t)$ is the concentration of the substance in the central compartment at time $t$.
+- $k_e$ is the elimination rate constant.
+
+=== Oral Administration
+
+Oral administration involves ingesting the substance, which then passes through the gastrointestinal tract before being absorbed into the bloodstream. The process can be modeled using multiple compartments to represent the stomach, intestines, and central compartment. The differential equations for oral administration are:
+
+$
+&ddt(c_s(t)) = - k_a c_s(t) \ 
+&ddt(c_i(t)) = k_a c_s(t) - k_b c_i(t) \ 
+&ddt(c_c(t)) = k_b c_i(t) - k_e c_c(t)
+$
+
+Where:
+- $c_s(t)$ is the concentration of the substance in the stomach at time $t$.
+- $c_i(t)$ is the concentration of the substance in the intestines at time $t$.
+- $c_c(t)$ is the concentration of the substance in the central compartment at time $t$.
+- $k_a$ is the absorption rate constant from the stomach to the intestines.
+- $k_b$ is the absorption rate constant from the intestines to the central compartment.
+- $k_e$ is the elimination rate constant.
+
+=== Inhalation Administration
+
+Inhalation administration involves breathing in the substance, which then passes through the lungs and into the bloodstream. The differential equations for inhalation administration can be modeled as follows:
+
+$
+&ddt(c_l(t)) = - k_a c_l(t) \ 
+&ddt(c_c(t)) = k_a c_l(t) - k_e c_c(t)
+$
+
+Where:
+- $c_l(t)$ is the concentration of the substance in the lungs at time $t$.
+- $c_c(t)$ is the concentration of the substance in the central compartment at time $t$.
+- $k_a$ is the absorption rate constant from the lungs to the central compartment.
+- $k_e$ is the elimination rate constant.
+
+=== Subcutaneous Administration
+
+Subcutaneous administration involves injecting the substance into the tissue beneath the skin, from where it is absorbed into the bloodstream. The differential equations for subcutaneous administration are:
+
+$
+&ddt(c_s(t)) = - k_a c_s(t) \ 
+&ddt(c_c(t)) = k_a c_s(t) - k_e c_c(t)
+$
+
+Where:
+- $c_s(t)$ is the concentration of the substance in the subcutaneous tissue at time $t$.
+- $c_c(t)$ is the concentration of the substance in the central compartment at time $t$.
+- $k_a$ is the absorption rate constant from the subcutaneous tissue to the central compartment.
+- $k_e$ is the elimination rate constant.
+
+=== Modelling Food Intake
+
 
 == Modelling repeated doses
+
+
+=== Repeated dose simulation in Python
 
 == Building models with Word Equations
 // == Compartmental Models
 
 
 // === One-Compartment Model
-// The one-compartment model is the simplest compartmental model in pharmacokinetics. As the name implies, it contains a single volume which contains the species or drug of interest. The one-compartment model is effective in describing drugs that are administered intravenously and remain in specific organs that have a high blood perfusion. This compartment typically combines the heart, liver, kidneys and the blood plasma into one #emph[central compartment], as seen in @one-compartment-model. 
-
-// #figure(image("figures/one-compartment-model.png", width: 40%), caption: [One-compartment model with a central compartment containing the drug, and a single elimination term.])<one-compartment-model>
-
-// For an IV bolus administration of a dose $D$ at $t = 0$, the one-compartment model equation is given as:
-// $ ddt(q(t)) = - k_q q(t) $
-// Where $q(0) = D$.
-
-// We can solve this differential equation easily by writing
-// $ integral (upright(d)q) / q = -k dot integral upright(d)t $ 
-// Which results in
-// $ ln(q(t)) = ln(D) - k t \ 
-//  => q(t) = D e^(-k dot t) $
-
-//  An important characteristic for a drug is the elimination half-life, which is defined as the time it takes for the drug amount to become half of its initial concentration. As $V_d$ is constant, half the concentration means half the amount of drug delivered, so we can derive a formula for this using
-//  $ q(t_(1 slash 2)) &= D e^(-k dot t_(1 slash 2)) = D/2 \
-//  &=> k dot t_(1 slash 2) = ln(2) \
-//  &=> t_(1 slash 2) = ln(2)/k $
-
-// To test whether a drug concentration after IV bolus injection can be modelled using a one-compartment model, we can plot the log-concentration value over time and inspect whether it has a linear slope. If the points at the low and high concentration values deviate from a linear slope, this may be reason to suspect that more compartments are necessary. However, this can also occur when the measuring equipment has a lower accuracy in specific low or high concentrations, or when the measurement device nears its limit of detection, which is the lowest concentration of drug that the test can measure.
-
-// === Two-Compartment Model
-// The most commonly used pharamcokinetic compartmental model is the two-compartment model. As the name indicates, this model contains two volumes where the drug can reside in. As in the one-compartment model, this model contains the central compartment, but it also contains a #emph[peripheral compartment]. While the compartments in this model have no direct physiological meaning, a reasonable assumption is to think of the central compartment as the highly-perfused tissues, where the drug administered spreads rapidly, while the peripheral compartment represents the tissues with a lower perfusion rate, such as the bone or the adipose tissue. 
-
-// #figure(image("figures/two-compartment-model.png", width: 40%), caption: [Two-compartment model with a central and a peripheral compartment containing the drug, which have exchange terms and the central compartment has an elimination term.])<two-compartment-model>
-
-// For an IV-bolus, the ODE system of the two-compartment model is
-// $ 
-// &ddt(q_1(t)) = -(k_0 + k_1) q_1(t) + k_2 q_2(t) \ 
-// &ddt(q_2(t)) = k_1 q_1(t) - k_2 q_2(t)
-// $
-
-// The solution of this model is more difficult, and requires the Laplace transform, which is beyond the scope of these lecture notes. Nevertheless, the solution for the central compartment is given by
-
-// $ q_1(t) = C_1 e^(-alpha t) + C_2 e^(-beta t) $
-
-// The constants $C_1$, $C_2$, $alpha$ and $beta$ are not in the original model equations, but can be calculated from them. $alpha$ and $beta$ are known as the #emph[macro]-rate constants. The four constants are related to the original model parameters as
-// $ 
-// alpha + beta = k_0 + k_1 + k_2 \
-// alpha dot beta = k_2 dot k_0 \
-// C_1 = (D_0 (alpha - k_2)) / (alpha - beta) \
-// C_2 = (D_0 (k_2 - beta)) / (alpha - beta)
-// $
-// Where $D_0$ is the initial bolus IV dose. 
-
-// From the equations, one can see that the drug clearance essentially has two phases. We have the fast-phase, which is controlled by $C_1$ and $alpha$, and the slow phase, controlled by $C_2$ and $beta$. Each of these phases also has their own half-life, which are named the distribution and elimination half-life respectively:
-
-// $ t_(1 slash 2, alpha) = ln(2)/alpha \
-// t_(1 slash 2, beta) = ln(2)/beta $
-
-// The reported half life of a drug adhering to two-compartmental kinetics is often only one value, which corresponds to the slowest of the two. 
 
 // // TODO: Add figures
 
 // === Physiologically-Based Pharmacokinetic Models
 // In traditional pharmacokinetic models, mainly one and two-compartment models are used, with some models containing more compartments, for example when a specific tissue of interest is modelled separately. However, when more detailed information is desired, we can turn to so-called _Physiologically-based pharmacokinetic_ (PBPK) models. These models contain separate compartments for many tissues in the body, and separate arterial and venous blood as compartments. @4cpbpk shows a four-compartment PBPK model. Each of these compartments has its own rate equations, describing the blood flow through a tissue and the metabolism happening. 
 
-// #figure(image("figures/4-comp-pbpk.png", width: 50%), caption: [A four-compartment PBPK model, showing various routes of administration, such as through inhalation, IV, or oral.])<4cpbpk>
 
 // The general form of a rate equation for a molecule $A$ in compartment $x$ PBPK model is
 
