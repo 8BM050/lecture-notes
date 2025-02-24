@@ -1,8 +1,8 @@
 #import "@preview/modern-technique-report:0.1.0": *
 #import "@preview/subpar:0.1.0"
 #import "@preview/showybox:2.0.4": showybox
-#import "@preview/codly:1.1.1": *
-#import "@preview/codly-languages:0.1.1": *
+#import "@preview/codly:1.2.0": *
+#import "@preview/codly-languages:0.1.7": *
 #show: codly-init.with()
 
 #codly(
