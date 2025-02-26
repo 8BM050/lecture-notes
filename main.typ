@@ -154,8 +154,6 @@ Authors: Max de Rooij
 #heading(level: 4, numbering: none,
 "Acknowledgements")
 
-Cover image by: #link("https://bvof.nl")[Bart van Overbeeke Photography]
-
 Parts of these lecture notes, in particular the first chapter on dynamic models, have been based on the lecture notes on simulation of biochemical systems by prof. Huub ten Eikelder.
 
 The chapter on graph theory has partially been based on the lectures from prof. Peter Hilbers on biological graph theory for the systems medicine course.  
