@@ -1,4 +1,4 @@
-#import "@preview/modern-technique-report:0.1.0": *
+#import "@preview/bubble:0.2.2": *
 #import "@preview/subpar:0.1.0"
 #import "@preview/showybox:2.0.4": showybox
 #import "@preview/codly:1.2.0": *
@@ -12,19 +12,45 @@
   )
 )
 
-#show: modern-technique-report.with(
-  title: [Introduction to Modelling in Systems Biology],
-  subtitle: [
-    *Systems Biology Models (8BM050)*
-  ],
-  series: [Eindhoven University of Technology \ Department of Biomedical Engineering],
-  author: [_M. de Rooij_],
-  date: [version: ]+datetime.today().display("[month]-[year]"),
-  background: image("decorative_figures/2024-2.jpg"),
-  theme-color: rgb(21, 74, 135),
-  font: "Avenir Next",
-  title-font: "Avenir Next",
-)
+#show: bubble.with(
+  title: "Introduction to Modelling in Systems Biology",
+  subtitle: "Systems Biology Models (8BM050)",
+  author: "Max de Rooij",
+  affiliation: "Department of Biomedical Engineering – Eindhoven University of Technology",
+  date: datetime.today().display(),
+  year: "2024-2025",
+  class: "8BM050",
+  logo: image("logo.png"),
+  main-color: rgb(21, 74, 135)
+) 
+
+#set text(font: "Source Sans 3", size: 11pt)
+// #show: primary-color(rgb(200, 25, 25))
+// #show body-font: "Avenir Next"
+
+// #show: ilm.with(
+//   title: [Introduction to Modelling in Systems Biology],
+//   author: "Max de Rooij",
+//   date: datetime.today(),
+//   abstract: [#lorem(30)],
+//   bibliography: bibliography("bib-refs.bib"),
+//   figure-index: (enabled: true),
+//   table-index: (enabled: true),
+//   listing-index: (enabled: true)
+// )
+// #show: modern-technique-report.with(
+//   title: [Introduction to Modelling in Systems Biology],
+//   subtitle: [
+//     *Systems Biology Models (8BM050)*
+//   ],
+//   series: [Eindhoven University of Technology \ Department of Biomedical Engineering],
+//   author: [_M. de Rooij_],
+//   date: [version: ]+datetime.today().display("[month]-[year]"),
+//   background: image("decorative_figures/2024-2.jpg"),
+//   theme-color: rgb(21, 74, 135),
+//   font: "Avenir Next",
+//   title-font: "Avenir Next",
+// )
 
 #show figure.where(
   kind: table
@@ -52,9 +78,9 @@
       grid(
         columns: (3fr, 1fr, 1fr),
         align: (left, right, right),
-        text(size: 24pt, fill: rgb(21, 74, 135), font: "Avenir Next")[#it.body],
+        text(size: 24pt, fill: rgb(21, 74, 135), font: "Barlow")[#it.body],
         line(start: (0pt, 40pt), end: (0pt, -75pt), stroke: 5pt + rgb(21, 74, 135).lighten(50%)),
-        text(size: 35pt, fill: rgb(21, 74, 135), font: "Avenir Next")[#ch.display("1")]
+        text(size: 35pt, fill: rgb(21, 74, 135), font: "Barlow")[#ch.display("1")]
       )
     )
   ] else [ // correction when no numbering is used
@@ -62,13 +88,21 @@
       grid(
         columns: (3fr, 1fr, 1fr),
         align: (left, right, right),
-        text(size: 24pt, fill: rgb(21, 74, 135), font: "Avenir Next")[#it.body],
+        text(size: 24pt, fill: rgb(21, 74, 135), font: "Barlow")[#it.body],
         [],
         []
       )
     )
   ]
 ]
+
+#show heading.where(
+  level: 2
+): set heading(numbering: "1.1)")
+
+#show heading.where(
+  level: 3
+): set heading(numbering: "1.1.1)")
 
 #let c = counter("example")
 
