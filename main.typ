@@ -12,6 +12,8 @@
   )
 )
 
+#set outline(title: "Table of contents")
+
 #show: bubble.with(
   title: "Introduction to Modelling in Systems Biology",
   subtitle: "Systems Biology Models (8BM050)",
@@ -80,7 +82,7 @@
         align: (left, right, right),
         text(size: 24pt, fill: rgb(21, 74, 135), font: "Barlow")[#it.body],
         line(start: (0pt, 40pt), end: (0pt, -75pt), stroke: 5pt + rgb(21, 74, 135).lighten(50%)),
-        text(size: 35pt, fill: rgb(21, 74, 135), font: "Barlow")[#ch.display("1")]
+        text(size: 35pt, fill: rgb(21, 74, 135), font: "Barlow")[#ch.display("I")]
       )
     )
   ] else [ // correction when no numbering is used
@@ -142,21 +144,23 @@
 )
 
 
-#heading(level: 3, numbering: none,
+#heading(level: 3, numbering: none,outlined: false,
 "Lecture Notes for the course 8BM050")
 
-Version: 2024-2025
+Version: v0.2.0 (2024-2025)
 
 Authors: Max de Rooij
 
 *Eindhoven University of Technology* \ _Department of Biomedical Engineering_, Computational Biology
 
-#heading(level: 4, numbering: none,
+#heading(level: 4, numbering: none, outlined: false,
 "Acknowledgements")
 
 Parts of these lecture notes, in particular the first chapter on dynamic models, have been based on the lecture notes on simulation of biochemical systems by prof. Huub ten Eikelder.
 
 The chapter on graph theory has partially been based on the lectures from prof. Peter Hilbers on biological graph theory for the systems medicine course.  
+
+#outline()
 
 = Introduction to Systems Biology
 
@@ -1505,3 +1509,189 @@ Where:
 // == Exercises
 
 #bibliography("bib-refs.bib")
+
+#heading(level: 1, numbering: none,
+"Answers to Exercises")
+
+#heading(level: 2, numbering: none, outlined: false,
+"Chapter 2")
+
+#heading(level: 3, numbering: none, outlined: false,
+"Exercise 1")
+*a.* $ mat(
+   "A", "B", "C", "D", "E", "F", "G", "H";
+    0, 1, 0, 0, 0, 0, 0, 1, "A";
+    1, 0, 1, 0, 0, 0, 0, 0, "B";
+    0, 1, 0, 1, 0, 0, 0, 0, "C";
+    0, 0, 1, 0, 1, 0, 0, 0, "D";
+    0, 0, 0, 1, 0, 1, 0, 0, "E";
+    0, 0, 0, 0, 1, 0, 1, 0, "F";
+    0, 0, 0, 0, 0, 1, 0, 1, "G";
+    1, 0, 0, 0, 0, 0, 1, 0, "H";
+  augment: #(hline: 1, vline: -1))
+$
+
+*b.* $ mat(
+   "A", "B", "C", "D", "E", "F", "G", "H";
+    0, 1, 0, 1, 1, 0, 0, 0, "A";
+    1, 0, 1, 0, 0, 0, 0, 0, "B";
+    0, 1, 0, 1, 0, 0, 0, 0, "C";
+    1, 0, 1, 0, 1, 0, 0, 0, "D";
+    1, 0, 0, 1, 0, 0, 0, 0, "E";
+    0, 0, 0, 0, 0, 0, 1, 1, "F";
+    0, 0, 0, 0, 0, 1, 0, 1, "G";
+    0, 0, 0, 0, 0, 1, 1, 0, "H";
+  augment: #(hline: 1, vline: -1))
+$
+
+*c.* $ mat(
+   "A", "B", "C", "D", "E", "F", "G", "H";
+    0, 0, 0, 0, 0, 1, 0, 0, "A";
+    0, 0, 1, 0, 1, 0, 0, 0, "B";
+    0, 1, 0, 1, 0, 0, 1, 0, "C";
+    0, 0, 1, 0, 1, 0, 0, 1, "D";
+    0, 1, 0, 1, 0, 0, 0, 0, "E";
+    1, 0, 0, 0, 0, 0, 0, 1, "F";
+    0, 0, 1, 0, 0, 0, 0, 0, "G";
+    0, 0, 0, 1, 0, 1, 0, 0, "H";
+  augment: #(hline: 1, vline: -1))
+$
+
+#heading(level: 3, numbering: none, outlined: false,
+"Exercise 2")
+*a.* 
+A. 5
+B. 5
+C. 4
+D. 3
+E. 4
+F. 4
+G. 5
+H. 3
+
+*b.* 3
+
+*c.* 5
+
+*d.* Vertices D and H
+
+#heading(level: 3, numbering: none, outlined: false,
+"Exercise 3")
+*a.* 2
+*b.* 0
+*c.* 11
+
+#heading(level: 3, numbering: none, outlined: false,
+"Exercise 4")
+- 
+
+#heading(level: 3, numbering: none, outlined: false,
+"Exercise 5")
+#subpar.grid(
+  figure(image("figures/2-5-molecule.png", width: 60%), caption: ""), <ex2-5-a>,
+  figure(image("figures/2-5-reaction.png", width: 60%), caption: ""), <ex2-5-b>,
+  figure(image("figures/2-5-mr.png", width: 60%), caption: ""), <ex2-5-c>,
+  columns: (1fr, 1fr, 1fr),
+  label: <ex2-5>,
+)
+
+Double edges in (a) can be ignored. Splitting of reaction 3 in a forward and reverse reaction is optional in (b) and (c). In (c), all edges without label have stoichiometric coefficient 1.
+
+#heading(level: 3, numbering: none, outlined: false,
+"Exercise 6")
+$ N = mat(
+   ,R_1, R_2, R_"3f", R_"3b", R_4;
+  "A", -1, 0, 0, 0, -1;
+  "B", 2, -1, 0, 0, 0;
+  "C", -1, 1, 0, 0, 0;
+  "D", 0, -1, 0, 0, 0;
+  "E", 0, 1, -3, 3, 0;
+  "F", 0, 0, 1, -1, -1;
+  "G", 0, 0, 0, 0, 1;augment: #(hline: 1, vline: 1)) 
+$
+
+#heading(level: 2, numbering: none, outlined: false,
+"Chapter 3")
+
+#heading(level: 3, numbering: none, outlined: false,
+"Exercise 1")
+
+*Equation 1)*
+
+- $k_(a,0)$: production
+- $k_(a,1)[a]$: consumption
+- $k_(a,2)[a][c]$: consumption
+
+*Equation 2)*
+
+- $k_(a,1)[a]$: production
+- $k_(a,2)[a][c]$: production
+- $k_(b,0)[b]$: consumption
+
+*Equation 3)*
+
+- $k_(b,0)[b]$: production
+- $k_(c,0)[c]$: consumption
+
+#heading(level: 3, numbering: none, outlined: false,
+"Exercise 2")
+
+$ 
+&ddt([E]) = -k_1[E][S] + k_(-1)[C_S] + k_2[C_S] \
+&ddt([S]) = -k_1[E][S] + k_(-1)[C_S] \
+&ddt([C_S]) = k_1[E][S] - k_(-1)[C_S] - k_2[C_S] \
+&ddt([P]) = k_2[C_S] \
+$
+
+
+#heading(level: 3, numbering: none, outlined: false,
+"Exercise 3")
+
+*a)* -
+
+*b)* 
+
+- $k=1$, $A(5.0) approx 0.067$
+- $k=5$, $A(5.0) approx 1.39 dot 10^(-10)$
+- $k=10$, $A(5.0) approx 1.93 dot 10^(-21)$
+
+
+#heading(level: 3, numbering: none, outlined: false,
+"Exercise 4")
+
+*a)*
+
+$ 
+&ddt([A]) = -k_1[A] + 2k_4[C][D] \
+&ddt([B]) = k_1[A] - k_2[B][C]^2 + k_3[D] - k_4[C][D] \
+&ddt([C]) = -2k_2[B][C]^2 + k_3[D] - k_4[C][D] \
+&ddt([D]) = k_2[B][C]^2 - k_3[D] - k_4[C][D] \
+$
+
+*b)* 
+
+- $k_1$: $s^(-1)$
+- $k_2$: $"mM"^(-2)s^(-1)$
+- $k_3$: $s^(-1)$
+- $k_4$: $"mM"^(-1)s^(-1)$
+
+#heading(level: 2, numbering: none, outlined: false,
+"Chapter 4")
+
+-
+
+
+#heading(level: 2, numbering: none, outlined: false,
+"Chapter 5")
+
+TBD
+
+#heading(level: 2, numbering: none, outlined: false,
+"Chapter 6")
+
+-
+
+
+
+
+
