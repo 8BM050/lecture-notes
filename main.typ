@@ -147,7 +147,7 @@
 #heading(level: 3, numbering: none,outlined: false,
 "Lecture Notes for the course 8BM050")
 
-Version: v0.2.0 (2024-2025)
+Version: v0.2.1 (2024-2025)
 
 Authors: Max de Rooij
 
