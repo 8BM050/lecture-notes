@@ -147,7 +147,7 @@
 #heading(level: 3, numbering: none,outlined: false,
 "Lecture Notes for the course 8BM050")
 
-Version: v0.2.1 (2024-2025)
+Version: v0.2.2 (2024-2025)
 
 Authors: Max de Rooij
 
@@ -159,6 +159,13 @@ Authors: Max de Rooij
 Parts of these lecture notes, in particular the first chapter on dynamic models, have been based on the lecture notes on simulation of biochemical systems by prof. Huub ten Eikelder.
 
 The chapter on graph theory has partially been based on the lectures from prof. Peter Hilbers on biological graph theory for the systems medicine course.  
+
+#heading(level: 4, numbering: none, outlined: false,
+"Versions")
+
+- v0.2.0: Initial version of the lecture notes for the course 8BM050.
+- v0.2.1: Added answers of exercises in chapters 2 and 3.
+- v0.2.2: Added chapter 6 on whole-body models.
 
 #outline()
 
@@ -1388,6 +1395,48 @@ a large PBPK model with some example compartments. This model contains seven com
 Additionally, various routes of administration are shown in this figure. In a later section of this chapter, we will dive into modelling these different routes of administration.
 #figure(image("figures/4-comp-pbpk.png", width: 50%), caption: [A seven-compartment PBPK model, showing various routes of administration, such as through inhalation, IV, or oral.])<4cpbpk>
 
+=== Transport Between Compartments
+When using compartment models, it is often a good idea to think about modelling transport between these compartments. Different molecules are transported differently accross membranes in the body, and this affects 
+the way we need to model the transport between compartments. In the simplest case, we have free diffusion over a membrane, where the transport rates are equal in both directions. Simple diffusion is therefore easily modelled, knowing that the inward
+rate can be written as:
+
+$ ddt(c_"out") = P (c_"out" - c_"in") $
+
+Where $P$ is the permeability of the membrane, and $c_"in"$ and $c_"out"$ are the concentrations on either side of the membrane. The outward rate can be written as:
+
+$ ddt(c_"in") = P (c_"in" - c_"out") $
+
+Note that when the concentrations are equal (i.e. $c_"in" = c_"out"$), the transport rate is zero. This does not mean that there is no transport, but rather that 
+the net transport is zero, so the transport out of the compartment is equal to the transport into the compartment.
+
+In many cases, the transport is not as simple as free diffusion. In many cases, transport is carried out by a transporter, which has a specific capacity for transport. This can be modelled using Michaelis-Menten kinetics. In the case of 
+bidirectional transport with equal rates, the equation can be written as:
+
+$ ddt(c_"in") = V_"max" (c_"out" / (K_M + c_"out") - c_"in" / (K_M + c_"in")) $
+
+Where $V_"max"$ is the maximum transport rate, and $K_M$ is the Michaelis-Menten constant. However, typically, transport only occurs in one direction. For example, in the case of glucose, conversion to glucose-6-phosphate is
+performed immediately after transport, so the glucose concentration in the cell ($c_"in"$) is typically zero. In this case, the equation can be simplified to:
+
+$ ddt(c_"in") = V_"max" c_"out" / (K_M + c_"out") $
+
+In some cases, we can even ignore the Michaelis-Menten constant, and model facilitated diffusion either using mass action kinetics, or even as a simple constant rate. In case the concentrations are always around the value of $K_M$, the Michaelis-Menten constant, and do typically
+not strongly exceed this value, the Michaelis-Menten equation can be simplified to:
+
+$ ddt(c_"in") = V_"max" c_"out" / K_M $ 
+
+When the concentration of the substrate in all cases is much larger than the Michaelis-Menten constant, the Michaelis-Menten equation can be simplified to:
+
+$ ddt(c_"in") = V_"max" $
+
+These assumptions are often made in modelling to reduce the number of parameters in the model, and to make the model more easily interpretable.
+
+In the case of active transport, we can move against the concentration gradient, which requires energy, such as ATP. This can be modelled using a term that is proportional to the concentration of ATP.
+
+$ ddt(c_"in") = f(["ATP"]) dot c_"out" $
+
+An exact model of active transport is often more complex, as it requires a detailed understanding of the transport mechanism.
+
+
 === Compartments as Delays
 In some models, compartments can be used to represent delays in the system. This is particularly useful when modeling processes that have a time lag between the input and the observable output. For example, in pharmacokinetics, the absorption of a drug into the bloodstream after oral administration can be delayed due to the time it takes for the drug to dissolve and pass through the gastrointestinal tract.
 
@@ -1439,21 +1488,6 @@ Where:
 - $k_b$ is the absorption rate constant from the intestines to the central compartment.
 - $k_e$ is the elimination rate constant.
 
-=== Inhalation Administration
-
-Inhalation administration involves breathing in the substance, which then passes through the lungs and into the bloodstream. The differential equations for inhalation administration can be modeled as follows:
-
-$
-&ddt(c_l(t)) = - k_a c_l(t) \ 
-&ddt(c_c(t)) = k_a c_l(t) - k_e c_c(t)
-$
-
-Where:
-- $c_l(t)$ is the concentration of the substance in the lungs at time $t$.
-- $c_c(t)$ is the concentration of the substance in the central compartment at time $t$.
-- $k_a$ is the absorption rate constant from the lungs to the central compartment.
-- $k_e$ is the elimination rate constant.
-
 === Subcutaneous Administration
 
 Subcutaneous administration involves injecting the substance into the tissue beneath the skin, from where it is absorbed into the bloodstream. The differential equations for subcutaneous administration are:
@@ -1471,13 +1505,70 @@ Where:
 
 === Modelling Food Intake
 
+While the previous methods of administration were all quite straightforward, more complicated equations exist for different methods of administration.
+Typically, the level of detail and the goal of the model are important for determining how to model the administration. An example is
+the administration of food. For example, in @odonovan_quantifying_2022, the oral administration of glucose is modelled by a gut compartment
+with the following equation:
+
+$ ddt(M_"gut"(t)) = -k_"gut" M_"gut"(t) + "Ra"(t) $
+
+With:
+
+$ "Ra"(t) = sigma dot k_1^sigma dot t^(sigma-1) dot exp(-k_1 t)^sigma dot D_"meal" $
+
+Where this $"Ra"(t)$ function describes the appearance of a glucose dose in the gut compartment over time. We can 
+visualize this function in @meal-appearance and see that it describes some sort of delayed appearance, depending on the value of $sigma$.
+
+#figure(image("figures/ra.png", width: 50%), caption: [The appearance of a glucose dose in the gut compartment over time, using the equation from the Mixed Meal Model, with different values for $sigma$.])<meal-appearance>
 
 == Modelling repeated doses
-
-
-=== Repeated dose simulation in Python
+A final important aspect of modelling drug administration is the modelling of repeated doses. When a drug is administered multiple times, the concentration of the drug in the body can accumulate over time, leading to different effects compared to a single dose. Therefore,
+when studying perturbation of a system, it is important to consider the effect of repeated doses, as this can have a significant impact on the overall behavior of the system. In a clinical setting, this is also important as we want to administer a drug in a way that it reaches its therapeutic concentration in the body, which is often achieved by repeated dosing.
 
 == Building models with Word Equations
+We now have the tools to start building models of real systems ourselves. Typically, the first step in building a model is to formulate the 
+goal of the model. This can be a simple question, such as "How does the concentration of a drug change over time after administration?" or a more complex question, such as "How does the concentration of a drug change over time in a patient with liver disease?".
+The goal of the model ultimately also determines the level of detail that is necessary. For example, if we are only interested in the concentration of a drug in the blood, a simple one-compartment model may suffice. However, if we are interested in the distribution of the drug in different tissues, 
+a more complex multi-compartment model may be required.
+
+Furthermore, we may be interested in the effects of a disease, such as diabetes, on specific organ-level processes in the body. To model these effects, we need to consider the interactions between different organs and tissues, as well as the effects of the disease on specific physiological processes.
+
+When we are satisfied with the formulation of a goal, and a level of detail, we then need to dive into the literature, to find the relevant biological information about the processes
+we need to model. This information can include studies that investigate the effects of specific drugs, or other perturbations, on the body, the knowledge about
+disease pathways, and the physiological processes that are relevant to the model. We can also look in the literature for values for the parameters that are necessary to build the model.
+
+From literature, we can then start building so-called "word equations". These are equations that describe the processes that we want to model in words. 
+For example, we can write down that a drug is absorbed from the gut into the bloodstream, that it is metabolized in the liver, and that it is excreted by the kidneys. These word equations can then be translated into mathematical equations, which we can then use to simulate the behavior of the system.
+
+The use of word equations can best be illustrated with an example. In this case, the goal of the model is to accurately describe the response of 
+healthy individuals, and individuals suffering from diabetes mellitus type 2 to an ingested solution of glucose. We are particularly interested in the differences between 
+these two groups. 
+
+First of all, we will need an equation for glucose. From literature, we know that the glucose in the blood is regulated by the liver, responsible for both production of glucose and storage of glucose, the pancreas, which produces insulin and glucagon, two hormones that regulate glucose levels, and the kidneys, which start
+to excrete glucose as soon as the concentration in the blood exceeds a certain threshold. We also know that glucose is absorbed by tissues in both an insulin-dependent and insulin-independent manner. Typically, the brain requires a constant supply of glucose, while muscle and adipose tissue can take up glucose in an insulin-dependent manner.
+
+We can summarize this knowledge in a word equation, which we can then translate into mathematical equations.
+
+$ ddt("glucose") = & "liver"(t) + "gut"(t) - "insulin-dependent uptake"(t) \
+& - "insulin-independent uptake"(t) - "kidney"(t) $
+
+This word equation can then be translated into mathematical equations, which we can use to simulate the behavior of the system. For example, for the liver, we can take
+the following equation, as used by Maas et al. @maas_physiology-based_2015:
+
+$ "liver"(t) = "EGP"_b - k_I I_"d" (t) - k_3(G_"pl" (t) - G_0) $
+
+We have:
+- $"EGP"_b$, the basal endogenous glucose production rate.
+- $k_I$, the insulin-dependent rate for reduction in glucose production.
+- $I_"d"  (t)$, delay compartment of insulin, used to simplify the long cascade of reactions.
+- $k_3$, glucose dependent rate for reduction in glucose production.
+- $G_"pl" (t)$, the plasma glucose concentration.
+- $G_0$, the setpoint for glucose concentration.
+
+This equation describes the glucose production in the liver, which is regulated by the plasma glucose concentration and the insulin concentration. At $t = 0$, we 
+have $I_"d"  (t) = 0$ and $G_"pl" (t) = G_0$, which means that the liver produces glucose at the basal rate in case insulin and glucose are at their fasting levels. We can see that many of the 
+aspects of modelling are present in this equation. We have a delay compartment, which represents the time it takes for insulin to reach the liver, we have a setpoint, which is the fasting glucose concentration, and we have a 
+mass-action rate that is dependent on the glucose concentration.
 // == Compartmental Models
 
 
